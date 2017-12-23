@@ -1,0 +1,88 @@
+<link rel="stylesheet" href="assets/lib/ztree/css/zTreeStyle/metro.css">
+<link rel="stylesheet" href="assets/lib/datetimepicker/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="assets/lib/bootstrap-table/bootstrap-table.min.css"/>
+<!-- Content -->
+<div ng-app="" id='content'>
+	<div style="margin:0px;" class="page-header">
+	  <h4>{{title}}</h4>
+	</div>
+	<div class="col-lg-3">
+		<div style="margin:0px;" class="page-header">
+		  <h5>头像上传</h5>
+		</div>
+		<div style="margin-top:10px;">
+			<input class="form-control" style="display:none;" id="myFile" type="file" file-model="myFile"/>
+			<div class="form-group" style="cursor:pointer; text-align:center; margin-top: 5px;">
+				<img class="img-rounded" id="avatarImg" style="width:140px;height:140px;" src="assets/images/avatar.png" title="更换头像" onerror="this.src='assets/images/avatar.png'" ng-click="selectFile()">
+			</div>
+		</div>
+		<div style="margin:0px;" class="page-header">
+		  <h5>分组选择</h5>
+		</div>
+		<ul id="groupTree" class="ztree" style="height: 262px; overflow: auto;"></ul>
+	</div>
+	<div class="col-lg-9">
+		<div style="margin:0px;" class="page-header">
+		  <h5>用户信息</h5>
+		</div>
+		<div style="margin-top:10px;">
+			<form id="userForm" class='form-horizontal'>
+				<input name="idUser" type="hidden" ng-model="user.idUser" disabled/>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>账号</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="userName" type='text' ng-model="user.userName">
+					</div>
+					<label class='col-lg-1 control-label'>昵称</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="userNick" type='text' ng-model="user.userNick"/>
+					</div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>密码</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="password" type='password' ng-model="user.password">
+					</div>
+					<label class='col-lg-1 control-label'>性别</label>
+					<div class='col-lg-5'>
+						<select class="form-control" name="gender" ng-model="user.gender">
+							<option value="1">男性</option>
+							<option value="0">女性</option>
+							<option value="2">其它</option>
+						</select>
+					</div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>个性签名</label>
+					<div class="col-lg-11">
+						<textarea style="resize:none;" class="form-control" name="signature" rows="4" ng-model="user.signature"></textarea>
+					</div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>手机</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="mobilephone" type='text' ng-model="user.mobilephone">
+					</div>
+					<label class='col-lg-1 control-label'>生日</label>
+					<div class='col-lg-5'>
+						<input class="form-control birthday" style="cursor:pointer;" id="birthday" name="birthday" type="text" ng-model="user.birthday" readonly>
+					</div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>QQ</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="qq" type='text' ng-model="user.qq">
+					</div>
+					<label class='col-lg-1 control-label'>住址</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="address" type='text' ng-model="user.address">
+					</div>
+				</div>
+				<div class='form-actions'>
+					<button class='btn btn-default' type='button' ng-click="mergeUser()">保存</button>
+					<a class='btn' href='#/user/userList'>取消</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

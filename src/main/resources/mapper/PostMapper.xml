@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.simple.dao.PostDao">
+
+    <!-- 获取贴子信息 -->
+    <select id="getPostById" parameterType="string" resultType="PostDO">
+        select * from sim_post where id_post = #{idPost}
+    </select>
+    
+    <!-- 贴子列表信息 -->
+    <select id="listPostsByIdColumn" parameterType="string" resultType="PostDO">
+        select p.id_post,
+               p.title,
+               p.summary,
+               p.tags,
+               p.content,
+               p.collect_num,
+               p.favor_num,
+               p.view_num,
+               p.status,
+               p.created_by,
+               p.created_date,
+               p.updated_by,
+               p.updated_date
+          from sim_post p, sim_column_post cp
+         where p.id_post = cp.id_post
+          and cp.id_column = #{idColumn}
+    </select>
+    
+    <!-- 贴子分页查询 -->
+    <select id="pagingPosts" parameterType="PostDTO" resultType="PostDO">
+        select p.id_post,
+               p.title,
+               p.summary,
+               p.tags,
+               p.content,
+               p.collect_num,
+               p.favor_num,
+               p.view_num,
+               p.status,
+               p.created_by,
+               p.created_date,
+               p.updated_by,
+               p.updated_date
+          from sim_post p, sim_column_post cp
+         where p.id_post = cp.id_post
+         <!-- 栏目ID -->
+         <if test="idColumn != null">
+            and find_in_set( cp.id_column, getColumnChildList(#{idColumn}))
+         </if>
+         <!-- 关键字 -->
+         <if test="keyWord != null">
+            and p.post_name like concat('%',#{keyWord},'%')
+         </if>
+         <!-- 开始日期 -->
+         <if test="startDate != null">
+            and date_format(p.created_date,'20%y-%m-%d') >= #{startDate} 
+         </if>
+         <!-- 结束日期 -->
+         <if test="endDate != null">
+            and date_format(p.created_date,'20%y-%m-%d') >= #{endDate} 
+         </if>
+         <!-- 排序字段 -->
+         <if test="sortName != null and sortOrder != null">
+            order by #{sortName} #{sortOrder}
+         </if>
+    </select>
+    
+    <!-- 保存贴子信息 -->
+    <insert id="savePost" parameterType="PostDO">
+        <selectKey keyProperty="idPost" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_post
+          (id_post,
+           id_user,
+           title,
+           summary,
+           tags,
+           content,
+           collect_num,
+           favor_num,
+           view_num,
+           status,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idPost},
+           #{idUser},
+           #{title},
+           #{summary},
+           #{tags},
+           #{content},
+           #{collectNum},
+           #{favorNum},
+           #{viewNum},
+           #{status},
+           #{createdBy},
+           #{createdDate},
+           #{updatedBy},
+           #{updatedDate})
+    </insert>
+    
+    <!-- 更新贴子信息 -->
+    <update id="updatePost" parameterType="PostDO">
+        update sim_post
+           set id_user      = #{idUser},
+               title        = #{title},
+               summary      = #{summary},
+               tags         = #{tags},
+               content      = #{content},
+               collect_num  = #{collectNum},
+               favor_num    = #{favorNum},
+               view_num     = #{viewNum},
+               status       = #{status},
+               created_by   = #{createdBy},
+               created_date = #{createdDate},
+               updated_by   = #{updatedBy},
+               updated_date = #{updatedDate}
+         where id_post = #{idPost}
+    </update>
+    
+    <!-- 删除贴子信息 -->
+    <delete id="deletePost" parameterType="string">
+        delete from sim_post where id_post = #{idPost}
+    </delete>
+    
+    <!-- 批量删除贴子信息 -->
+    <delete id="batchDeletePosts" parameterType="list">
+        delete from sim_post where id_user in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+    <!-- 获取贴子评论列表 -->
+    <select id="listPostCommentsByIdPost" parameterType="string" resultType="PostCommentDO">
+    	select * from sim_post_comment where id_post = #{idPost}
+    </select>
+    
+    <!-- 保存贴子评论信息 -->
+    <insert id="savePostComment" parameterType="SystemMenuDO">
+    	<selectKey keyProperty="idPostComment" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_post_comment
+          (id_post_comment,
+           id_post,
+           id_comment,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idPostComment},
+           #{idPost},
+           #{idComment},
+           #{createdBy},
+           #{createdDate},
+           #{updatedBy},
+           #{updatedDate})
+    </insert>
+    
+    <!-- 删除贴子评论信息 -->
+    <delete id="deletePostComment" parameterType="string">
+        delete from sim_post_comment where id_post = #{idPostComment}
+    </delete>
+    
+    <!-- 批量删除贴子评论信息 -->
+    <delete id="batchDeletePostComments" parameterType="list">
+        delete from sim_post_comment where id_post in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+</mapper>
