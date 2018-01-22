@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>欢迎使用</title>
+<link rel="stylesheet" href="assets/lib/bootstrap/bootstrap.min.css">
+</head>
+<body class="layui-layout-body" ng-controller="IndexController">
+	<!-- 导航栏 -->
+	<nav style="padding-left:60px;" class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="row">
+				<div style="padding-left:60px;" class="col-xs-2">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+							data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+							<span class="sr-only"></span>Toggle navigation 
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#">简&nbsp;&nbsp;约</a>
+					</div>
+				</div>
+				<div style="padding-left:0px;" class="col-xs-10">
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav">
+							<li><a href="javacript:void(0);" ng-click="changeModule('index')">首页</a></li>
+							<li><a href="javacript:void(0);" ng-click="changeModule('contentManagement')">内容管理</a></li>
+							<li><a href="javacript:void(0);" ng-click="changeModule('permissionControl')">权限控制</a></li>
+							<li><a href="javacript:void(0);" ng-click="changeModule('dataAnalysis')">数据分析</a></li>
+							<li><a href="javacript:void(0);" ng-click="changeModule('intelligentComputing')">智能运算</a></li>
+						</ul>
+						<form class="navbar-form navbar-left">
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="Search">
+							</div>
+						</form>
+						<ul class="nav navbar-nav navbar-right">
+							<li><a href="#">前台</a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" 
+									role="button" aria-haspopup="true" aria-expanded="false">{{currentUser.userName}}
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li><a href="#/user/userForm?idUser={{currentUser.idUser}}">个人资料</a></li>
+									<li><a href="#">修改密码</a></li>
+									<li role="separator" class="divider"></li>
+									<li><a href="logout">退出</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<!-- 左侧菜单栏 -->
+	<div class="row" style="margin-top:20px;margin-left:60px;margin-right:60px;">
+		<div class="col-xs-2">
+			<div class="list-group">
+				<span style="background:#e7e7e7;font-weight: bold;" class="list-group-item"> 菜单选项 </span>
+				<a ng-repeat="menuItem in menuItems" ng-bind="menuItem.menuName" href="{{menuItem.menuUrl}}" class="list-group-item"></a>
+			</div>
+		</div>
+		<div class="col-xs-10">
+			<div data-ng-view></div>
+		</div>
+	</div>
+	
+	<!-- 引入js文件 -->
+	<script data-main="assets/js/main" src="assets/lib/requirejs/require.js"></script>
+</body>
+</html>

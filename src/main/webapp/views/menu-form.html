@@ -1,0 +1,84 @@
+<link rel="stylesheet" href="assets/lib/ztree/css/zTreeStyle/metro.css">
+<link rel="stylesheet" href="assets/lib/datetimepicker/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="assets/lib/bootstrap-table/bootstrap-table.min.css"/>
+<!-- 上级菜单 -->
+<div class="modal fade" id="superMenuModal" tabindex="-1" role="dialog" aria-labelledby="superMenuLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class='panel-heading'>
+					<i class='icon-reorder icon-large'></i> 上级菜单
+				</div>
+				<div class='panel-body text-center'>
+					<ul id="superMenuTree" class="ztree" style="overflow: auto;"></ul>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-primary" ng-click="selectSuperMenu()">确认</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Content -->
+<div ng-app="" id='content'>
+	<div style="margin:0px;" class="page-header">
+	  <h4>{{title}}</h4>
+	</div>
+	<div class="col-lg-3">
+		<div style="margin:0px;" class="page-header">
+		  <h5>系统选择</h5>
+		</div>
+		<ul id="systemTree" class="ztree" style="height: 262px; overflow: auto;"></ul>
+	</div>
+	<div class="col-lg-9">
+		<div style="margin:0px;" class="page-header">
+		  <h5>菜单信息</h5>
+		</div>
+		<div style="margin-top:10px;">
+			<form id="menuForm" class='form-horizontal'>
+				<input name="idMenu" type="hidden" ng-model="menu.idMenu" disabled/>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>上级菜单</label>
+					<div class='col-lg-5'>
+						<input type='hidden' class='form-control' name="idParent" ng-model="menu.idParent">
+						<input style="cursor:pointer;" type='text' class='form-control' name="parentMenuName" ng-model="menu.parentMenuName" ng-click="openSuperMenuTree()" readonly>
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>菜单名称</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="menuName" type='text' ng-model="menu.menuName">
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>菜单编码</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="menuCode" type='text' ng-model="menu.menuCode">
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>菜单URL</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="menuUrl" type='text' ng-model="menu.menuUrl">
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>菜单描述</label>
+					<div class="col-lg-5">
+						<textarea style="resize:none;" class="form-control" name="menuDesc" rows="4" ng-model="menu.menuDesc"></textarea>
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-actions'>
+					<button class='btn btn-default' type='button' ng-click="mergeMenu()">保存</button>
+					<a class='btn' href='#/menu/menuList'>取消</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

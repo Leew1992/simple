@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+	
+	<!-- 指定springmvc的扫描路径 -->
+    <context:component-scan base-package="org.simple.controller"/>
+	
+	<!-- 启用spring mvc 注解 -->
+    <mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/plain;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json; charset=UTF-8</value>
+						<value>application/x-www-form-urlencoded; charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven> 
+	
+    <!-- 配置视图解析路径 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/views/"/>
+		<property name="suffix" value=".html"/>
+	</bean>
+	
+    <!-- 将静态文件指定到某个特殊的文件夹中统一处理 -->
+	<mvc:resources  mapping="/assets/**" location="/assets/" />
+	
+	<!-- 配置上传文件的参数 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <property name="defaultEncoding" value="utf-8" />
+		<property name="maxUploadSize" value="2097152" />
+		<property name="maxInMemorySize" value="40960" />  
+    </bean>
+    
+    <!-- 自定义注解拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/assets/**"/>
+            <mvc:exclude-mapping path="/views/**"/>
+            <bean class="org.simple.aspect.MonitorAspect"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    
+</beans>

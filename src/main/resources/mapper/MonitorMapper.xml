@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.simple.dao.MonitorDao">
+
+	<!-- 监控访问分页查询 -->
+	<select id="listUnstatedMonitorAccesses" resultType="MonitorAccessDTO">
+		select * from sim_monitor_access ma where ma.is_stated = '0'
+	</select>
+	
+	<!-- 监控访问分页查询 -->
+	<select id="pagingMonitorAccesses" parameterType="MonitorAccessDTO" resultType="MonitorAccessDTO">
+		select * from sim_monitor_access ma where 1 = 1
+			 <!-- 开始日期 -->
+			 <if test='startDate != null'>
+			    and date_format(ma.created_date,'20%y-%m-%d') >= #{startDate} 
+			 </if>
+			 <!-- 结束日期 -->
+			 <if test='endDate != null'>
+			    and date_format(ma.created_date,'20%y-%m-%d') >= #{endDate} 
+			 </if>
+			 <!-- 排序字段 -->
+			 <if test='sortName != null and sortOrder != null'>
+			    order by #{sortName} #{sortOrder}
+			 </if>
+	</select>
+	
+    <!-- 保存监控访问信息 -->
+	<insert id="saveMonitorAccess" parameterType="MonitorAccessDO">
+		<selectKey keyProperty="idMonitorAccess" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_monitor_access
+		  (id_monitor_access,
+		   id_user,
+		   access_module,
+		   request_uri,
+		   remote_address,
+		   is_stated,
+		   created_by,
+		   created_date,
+		   updated_by,
+		   updated_date)
+		values
+		  (#{idMonitorAccess},
+		   #{idUser},
+		   #{accessModule},
+		   #{requestURI},
+		   #{remoteAddress},
+		   false,
+		   #{createdBy},
+		   sysdate(),
+		   #{updatedBy},
+		   sysdate())
+    </insert>
+    
+    <!-- 批量关闭监控访问信息 -->
+	<update id="batchCloseMonitorAccesses" parameterType="list">
+	    update sim_monitor_access ma set ma.is_stated = '1' where ma.id_monitor_access in 
+	    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+	        #{item}  
+	    </foreach> 
+	</update>
+    
+	<!-- 删除监控访问信息 -->
+	<delete id="deleteMonitorAccess" parameterType="string">
+	    delete from sim_monitor_access ma where ma.id_monitor_access = #{idMonitorAccess}
+	</delete>
+	
+	<!-- 批量删除监控访问信息 -->
+	<delete id="batchDeleteMonitorAccesses" parameterType="list">
+	    delete from sim_monitor_access ma where ma.id_monitor_access in 
+	    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+	        #{item}  
+	    </foreach> 
+	</delete>
+	
+</mapper>

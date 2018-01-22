@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+    
+    <context:component-scan base-package="org.simple.quartz" />
+
+	<!-- 监控访问JobDetail -->
+	<bean name="statAccessJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="org.simple.quartz.StatAccessJob" />
+		<property name="durability" value="true" />
+	</bean>
+	
+	<!-- 监控数据JobDetail -->
+	<bean name="statDataJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="org.simple.quartz.StatDataJob" />
+		<property name="durability" value="true" />
+	</bean>
+
+	<!-- 监控访问Trigger -->
+	<bean id="statAccessTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="statAccessJobDetail" />
+		<property name="cronExpression" value="0 0/30 * * * ? " />
+	</bean>
+	
+	<!-- 监控数据Trigger -->
+	<bean id="statDataTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="statDataJobDetail" />
+		<property name="cronExpression" value="0 0/30 * * * ? " />
+	</bean>
+
+	<!-- 调度工厂 -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobDetails">
+			<list>
+				<ref bean="statAccessJobDetail" />
+				<ref bean="statDataJobDetail" />
+			</list>
+		</property>
+
+		<property name="triggers">
+			<list>
+				<ref bean="statAccessTrigger" />
+				<ref bean="statDataTrigger" />
+			</list>
+		</property>
+		
+		<property name="jobFactory">
+			<bean class="org.simple.quartz.JobFactory" />
+		</property>
+	</bean>
+
+</beans>

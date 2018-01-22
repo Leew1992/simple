@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.simple.dao.ColumnDao">
+
+    <!-- 获取栏目信息 -->
+    <select id="getColumnById" parameterType="string" resultType="ColumnDO">
+        select * from sim_column where id_column = #{idColumn}
+    </select>
+    
+    <!-- 获取栏目信息 -->
+    <select id="listColumnsByIdParent" parameterType="string" resultType="ColumnDO">
+        select * from sim_column where id_parent = #{idParent}
+    </select>
+    
+    <!-- 栏目列表查询 -->
+    <select id="listAllColumns" parameterType="string" resultType="ColumnDO">
+        select * from sim_column
+    </select>
+    
+    <!-- 获取栏目树 -->
+    <select id="getColumnTree" parameterType="string" resultType="TreeNode">
+        select id_column "id",
+		       id_parent "pId",
+		       column_name "name",
+		       column_desc "desc",
+		       true as "open"
+		  from sim_column
+    </select>
+    
+    <!-- 获取栏目树 -->
+    <select id="getHasCheckedColumnTreeByIdPost" parameterType="string" resultType="TreeNode">
+        select id_column "id",
+		       id_parent "pId",
+		       column_name "name",
+		       column_desc "desc",
+		       true as "open",
+		       case
+		         when id_column in (select cp.id_column
+		                                from sim_column_post cp
+		                               where cp.id_post = #{idPost}) then
+		          true
+		         else
+		          false
+		       end "checked"
+		  from sim_column
+    </select>
+    
+    <!-- 保存栏目信息 -->
+    <insert id="saveColumn" parameterType="ColumnDO">
+    	<selectKey keyProperty="idColumn" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_column
+          (id_column,
+           id_parent,
+           column_name,
+           column_code,
+           column_desc,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idColumn},
+           #{idParent},
+           #{columnName},
+           #{columnCode},
+           #{columnDesc},
+           #{createdBy},
+           sysdate(),
+           #{updatedBy},
+           sysdate())
+    </insert>
+    
+    <!-- 更新栏目信息 -->
+    <update id="updateColumn" parameterType="ColumnDO">
+        update sim_column
+           set column_name    = #{columnName},
+               column_code    = #{columnCode},
+               column_desc    = #{columnDesc},
+               updated_by   = #{updatedBy},
+               updated_date = sysdate()
+         where id_column = #{idColumn}
+    </update>
+    
+    <!-- 删除栏目信息 -->
+    <delete id="deleteColumn" parameterType="string">
+        delete from sim_column where id_column = #{idColumn}
+    </delete>
+    
+    <!-- 批量删除栏目信息 -->
+    <delete id="batchDeleteColumns" parameterType="list">
+        delete from sim_column where id_column in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+    <!-- 获取栏目菜单信息 -->
+    <select id="getColumnPostByIdPost" parameterType="string" resultType="ColumnDO">
+        select * from sim_column_post where id_post = #{idPost}
+    </select>
+    
+    <!-- 保存栏目菜单信息 -->
+    <insert id="saveColumnPost" parameterType="ColumnPostDO">
+    	<selectKey keyProperty="idColumnPost" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_column_post
+          (id_column_post,
+           id_column,
+           id_post,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idColumnPost},
+           #{idColumn},
+           #{idPost},
+           #{createdBy},
+           sysdate(),
+           #{updatedBy},
+           sysdate())
+    </insert>
+    
+    <!-- 删除栏目菜单信息 -->
+    <delete id="deleteColumnPost" parameterType="string">
+        delete from sim_column_post where id_post = #{idPost}
+    </delete>
+    
+    <!-- 批量删除栏目菜单信息 -->
+    <delete id="batchDeleteColumnPosts" parameterType="list">
+        delete from sim_column_post where id_column in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+</mapper>

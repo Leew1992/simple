@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.simple.dao.RoleDao">
+
+    <!-- 获取角色信息 -->
+    <select id="getRoleById" parameterType="string" resultType="RoleDO">
+        select * from sim_role where id_role = #{idRole}
+    </select>
+
+    <!-- 获取角色信息 -->
+    <select id="getRoleByName" parameterType="string" resultType="RoleDO">
+        select * from sim_role where role_name = #{roleName}
+    </select>
+    
+    <!-- 获取角色列表信息 -->
+    <select id="listRolesByIdGroup" parameterType="RoleDTO" resultType="RoleDO">
+        select r.id_role,
+		       r.role_name,
+		       r.role_desc,
+		       r.created_date,
+		       r.updated_date
+		  from sim_role r, sim_group_role gr
+		 where r.id_role = gr.id_role
+         <if test="idGroup != null">
+           and id_group = #{idGroup}
+        </if>
+    </select>
+    
+    <!-- 获取角色列表信息 -->
+    <select id="listRolesByIdUser" parameterType="RoleDTO" resultType="RoleDTO">
+        select r.id_role,
+		       r.id_parent,
+		       r.role_name,
+		       r.role_desc,
+		       case
+		         when r.id_role in (select ur.id_role
+		                              from sim_user_role ur
+		                             where ur.id_user = #{idUser}) then
+		          true
+		         else
+		          false
+		       end "checked"
+		  from sim_role r
+		  left join sim_group_role gr
+		    on r.id_role = gr.id_role
+    </select>
+    
+    <!-- 角色分页获取 -->
+    <select id="pagingRoles" parameterType="RoleDTO" resultType="RoleDO">
+        select * from sim_role r
+		 where 1 = 1
+         <!-- 分组ID -->
+         <if test='idGroup != null and idGroup != "0"'>
+            and exists
+			 (select 1
+			          from sim_group_role gr
+			         where gr.id_role = r.id_role
+			           and find_in_set(gr.id_group, getGroupChildList(#{idGroup})))
+         </if>
+         <!-- 关键字 -->
+         <if test='keyWord != null'>
+            and r.role_name like concat('%',#{keyWord},'%')
+         </if>
+         <!-- 开始日期 -->
+         <if test='startDate != null'>
+            and date_format(r.created_date,'20%y-%m-%d') >= #{startDate} 
+         </if>
+         <!-- 结束日期 -->
+         <if test='endDate != null'>
+            and date_format(r.created_date,'20%y-%m-%d') >= #{endDate} 
+         </if>
+         <!-- 排序字段 -->
+         <if test="sortName != null and sortOrder != null">
+            order by #{sortName} #{sortOrder}
+         </if>
+    </select>
+    
+    <!-- 获取角色树 -->
+    <select id="getRoleTreeForUserList" parameterType="RoleDTO" resultType="TreeNode">
+        select id_role	"id",
+		       id_parent	"pId",
+		       role_name	"name",
+		       role_desc	"desc",
+		       true	as	"open",
+		       case
+		         when id_role in (select ur.id_role
+		                              from sim_user_role ur
+		                             where ur.id_user = #{idUser}) then
+		          true
+		         else
+		          false
+		       end "checked"
+		  from sim_role
+    </select>
+    
+    <!-- 获取有权限的菜单列表 -->
+    <select id="listHasPermitedMenus" parameterType="map" resultType="MenuDO">
+        select *
+		  from sim_menu m
+		 where m.id_menu in
+		       (select rm.id_menu
+		          from sim_role_menu rm
+		         where rm.id_role = #{idRole}
+		           and rm.id_menu in
+		               (select sm.id_menu
+		                  from sim_system_menu sm
+		                 where sm.id_system = #{idSystem}))
+    </select>
+    
+    <!-- 保存角色信息 -->
+    <insert id="saveRole" parameterType="RoleDO">
+    	<selectKey keyProperty="idRole" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_role
+          (id_role,
+           role_name,
+           role_desc,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idRole},
+           #{roleName},
+           #{roleDesc},
+           #{createdBy},
+           sysdate(),
+           #{updatedBy},
+           sysdate())
+    </insert>
+    
+    <!-- 更新角色信息 -->
+    <update id="updateRole" parameterType="RoleDO">
+        update sim_role
+           set role_name    = #{roleName},
+               role_desc    = #{roleDesc},
+               updated_by   = #{updatedBy},
+               updated_date = sysdate()
+         where id_role = #{idRole}
+    </update>
+    
+    <!-- 删除角色信息 -->
+    <delete id="deleteRole" parameterType="string">
+        delete from sim_role where id_role = #{idRole}
+    </delete>
+    
+    <!-- 批量删除角色信息 -->
+    <delete id="batchDeleteRoles" parameterType="list">
+        delete from sim_role where id_role in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+    <!-- 获取角色系统列表 -->
+    <select id="listRoleSystemsByIdRole" parameterType="string" resultType="RoleSystemDO">
+        select * from sim_role_system rs where rs.id_role = #{idRole}
+    </select>
+    
+    <!-- 获取角色系统信息 -->
+    <select id="getHasPermitedRoleSystem" parameterType="map" resultType="RoleSystemDO">
+    	select *
+		  from sim_role_system rs
+		  join sim_system s
+		    on rs.id_system = s.id_system
+		  join sim_role r
+		    on rs.id_role = r.id_role
+		 where s.system_code = #{systemCode}
+		   and r.role_name in
+		   <foreach collection="roleNames" index="index" item="item" open="(" separator="," close=")">  
+	            #{item}  
+	        </foreach> 
+		   limit 1
+    </select>
+    
+    <!-- 保存角色菜单信息 -->
+    <insert id="saveRoleMenu" parameterType="RoleMenuDO">
+    	<selectKey keyProperty="idRoleMenu" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_role_menu
+          (id_role_menu,
+           id_role,
+           id_menu,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idRoleMenu},
+           #{idRole},
+           #{idMenu},
+           #{createdBy},
+           sysdate(),
+           #{updatedBy},
+           sysdate())
+    </insert>
+    
+    <!-- 保存角色菜单信息 -->
+    <insert id="saveRoleSystem" parameterType="RoleSystemDO">
+    	<selectKey keyProperty="idRoleSystem" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_role_system
+          (id_role_system,
+           id_role,
+           id_system,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idRoleSystem},
+           #{idRole},
+           #{idSystem},
+           #{createdBy},
+           sysdate(),
+           #{updatedBy},
+           sysdate())
+    </insert>
+    
+    <!-- 删除角色菜单信息 -->
+    <delete id="deleteRoleMenusByIdRole">
+        delete from sim_role_menu where id_role = #{idRole}
+    </delete>
+    
+    <!-- 删除角色菜单信息 -->
+    <delete id="deleteRoleMenusByIdMenu" parameterType="string">
+        delete from sim_role_menu where find_in_set(id_menu, getMenuChildList(#{idMenu}))
+    </delete>
+    
+    <!-- 删除角色菜单信息 -->
+    <delete id="deleteCanceledRoleMenu" parameterType="map">
+        delete from sim_role_menu
+          where id_role = #{idRole}
+          	and id_menu in (
+	          select sm.id_menu from sim_system_menu sm
+	         where sm.id_system not in
+	            <foreach collection="idSystems" index="index" item="item" open="(" separator="," close=")">  
+		            #{item}  
+		        </foreach> 
+	        )
+    </delete>
+    
+    <!-- 删除角色系统信息 -->
+    <delete id="deleteRoleSystemsByIdRole" parameterType="string">
+        delete from sim_role_system where id_role = #{idRole}
+    </delete>
+    
+    <!-- 批量删除角色菜单信息 -->
+    <delete id="batchDeleteRoleMenus">
+        delete from sim_role_menu where id_role in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+</mapper>

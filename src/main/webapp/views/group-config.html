@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="assets/lib/ztree/css/zTreeStyle/metro.css">
+<link rel="stylesheet" href="assets/lib/datetimepicker/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="assets/lib/bootstrap-table/bootstrap-table.min.css"/>
+<!-- Content -->
+<div ng-app="" id='content'>
+	<div style="margin:0px;" class="page-header">
+	  <h4>分组配置</h4>
+	</div>
+	<div class="col-lg-3">
+		<div style="margin:0px;" class="page-header">
+		  <h5>分组树
+		  	<div style="display:block;float:right;">
+			  	<button class='btn btn-default btn-sm' type='button' ng-click="addForm()">新增</button>
+			  	<button class='btn btn-default btn-sm' type='button' ng-click="deleteGroup()">删除</button>
+		  	</div>
+		  </h5>
+		</div>
+		<ul id="groupTree" class="ztree" style="height: 400px; overflow: auto;"></ul>
+	</div>
+	<div class="col-lg-9">
+		<div style="margin:0px;" class="page-header">
+		  <h5>{{actionType}}分组</h5>
+		</div>
+		<div style="margin-top:10px;">
+			<form id="groupForm" class='form-horizontal'>
+				<input name="idGroup" type="hidden" ng-model="group.idGroup" disabled/>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>分组名称</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="groupName" type='text' ng-model="group.groupName">
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>分组编码</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="groupCode" type='text' ng-model="group.groupCode">
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>分组描述</label>
+					<div class="col-lg-5">
+						<textarea style="resize:none;" class="form-control" name="groupDesc" rows="4" ng-model="group.groupDesc"></textarea>
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-actions'>
+					<input type='submit' class='btn btn-default' ng-click="mergeGroup()" value="保存"></input>
+					<input type='reset' class='btn'></input>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

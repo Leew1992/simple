@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.simple.dao.StatDataDao">
+
+	<!-- 列出日数据统计 -->
+	<select id="listStatDayDatas" parameterType="string" resultType="StatDayDataDO">
+		select * from sim_stat_day_data
+		 where access_date = #{accessDate}
+	</select>
+	
+	<!-- 列出周数据统计 -->
+	<select id="listStatWeekDatas" parameterType="string" resultType="StatWeekDataDO">
+		select * from sim_stat_week_data
+		 where access_date = #{accessDate}
+	</select>
+	
+	<!-- 列出月数据统计 -->
+	<select id="listStatMonthDatas" parameterType="string" resultType="StatMonthDataDO">
+		select * from sim_stat_month_data
+		 where access_date = #{accessDate}
+	</select>
+	
+	<!-- 列出年数据统计 -->
+	<select id="listStatYearDatas" parameterType="string" resultType="StatYearDataDO">
+		select * from sim_stat_year_data
+		 where access_date = #{accessDate}
+	</select>
+	
+	<!-- 保存日数据统计 -->
+    <insert id="saveStatDayData" parameterType="StatDayDataDO">
+    	<selectKey keyProperty="idStatDayData" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+    	insert into sim_stat_day_data
+		  (id_stat_day_data,
+		   user_total,
+		   post_total,
+		   comment_total,
+		   picture_total,
+		   video_total,
+		   access_total,
+		   access_date,
+		   created_by,
+		   created_date,
+		   updated_by,
+		   updated_date)
+		values
+		  (#{idStatDayData},
+		   #{userTotal},
+		   #{postTotal},
+		   #{commentTotal},
+		   #{pictureTotal},
+		   #{videoTotal},
+		   #{accessTotal},
+		   #{accessDate},
+		   #{createdBy},
+		   sysdate(),
+		   #{updatedBy},
+		   sysdate())
+    </insert>
+    
+    <!-- 保存周数据统计 -->
+    <insert id="saveStatWeekData" parameterType="StatWeekDataDO">
+    	<selectKey keyProperty="idStatWeekData" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+    	insert into sim_stat_week_data
+		  (id_stat_week_data,
+		   user_total,
+		   post_total,
+		   comment_total,
+		   picture_total,
+		   video_total,
+		   access_total,
+		   access_date,
+		   created_by,
+		   created_date,
+		   updated_by,
+		   updated_date)
+		values
+		  (#{idStatWeekData},
+		   #{userTotal},
+		   #{postTotal},
+		   #{commentTotal},
+		   #{pictureTotal},
+		   #{videoTotal},
+		   #{accessTotal},
+		   #{accessDate},
+		   #{createdBy},
+		   sysdate(),
+		   #{updatedBy},
+		   sysdate())
+    </insert>
+    
+    <!-- 保存月数据统计 -->
+    <insert id="saveStatMonthData" parameterType="StatMonthDataDO">
+    	<selectKey keyProperty="idStatMonthData" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+    	insert into sim_stat_month_data
+		  (id_stat_month_data,
+		   user_total,
+		   post_total,
+		   comment_total,
+		   picture_total,
+		   video_total,
+		   access_total,
+		   access_date,
+		   created_by,
+		   created_date,
+		   updated_by,
+		   updated_date)
+		values
+		  (#{idStatMonthData},
+		   #{userTotal},
+		   #{postTotal},
+		   #{commentTotal},
+		   #{pictureTotal},
+		   #{videoTotal},
+		   #{accessTotal},
+		   #{accessDate},
+		   #{createdBy},
+		   sysdate(),
+		   #{updatedBy},
+		   sysdate())
+    </insert>
+    
+    <!-- 保存年数据统计 -->
+    <insert id="saveStatYearData" parameterType="StatYearDataDO">
+    	<selectKey keyProperty="idStatYearData" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+    	insert into sim_stat_year_data
+		  (id_stat_year_data,
+		   user_total,
+		   post_total,
+		   comment_total,
+		   picture_total,
+		   video_total,
+		   access_total,
+		   access_date,
+		   created_by,
+		   created_date,
+		   updated_by,
+		   updated_date)
+		values
+		  (#{idStatYearData},
+		   #{userTotal},
+		   #{postTotal},
+		   #{commentTotal},
+		   #{pictureTotal},
+		   #{videoTotal},
+		   #{accessTotal},
+		   #{accessDate},
+		   #{createdBy},
+		   sysdate(),
+		   #{updatedBy},
+		   sysdate())
+    </insert>
+    
+    <!-- 更新日数据统计 -->
+    <update id="updateDayDataForCurrentDay" parameterType="StatDayDataDO">
+		update sim_stat_day_data dd
+		   set dd.user_total = #{userTotal},
+		   	   dd.post_total = #{postTotal},
+		   	   dd.comment_total = #{commentTotal},
+		   	   dd.picture_total = #{pictureTotal},
+		   	   dd.video_total = #{videoTotal}
+		 where dd.access_date = #{accessDate}
+    </update>
+    
+    <!-- 更新周数据统计 -->
+    <update id="updateWeekDataForCurrentWeek" parameterType="StatWeekDataDO">
+		update sim_stat_week_data wd
+		   set wd.user_total = #{userTotal},
+		   	   wd.post_total = #{postTotal},
+		   	   wd.comment_total = #{commentTotal},
+		   	   wd.picture_total = #{pictureTotal},
+		   	   wd.video_total = #{videoTotal}
+		 where wd.access_date = #{accessDate}
+    </update>
+    
+    <!-- 更新月数据统计 -->
+    <update id="updateMonthDataForCurrentMonth" parameterType="StatMonthDataDO">
+		update sim_stat_month_data md
+		   set md.user_total = #{userTotal},
+		   	   md.post_total = #{postTotal},
+		   	   md.comment_total = #{commentTotal},
+		   	   md.picture_total = #{pictureTotal},
+		   	   md.video_total = #{videoTotal}
+		 where md.access_date = #{accessDate}
+    </update>
+    
+    <!-- 更新年数据统计 -->
+    <update id="updateYearDataForCurrentYear" parameterType="StatYearDataDO">
+		update sim_stat_year_data yd
+		   set yd.user_total = #{userTotal},
+		   	   yd.post_total = #{postTotal},
+		   	   yd.comment_total = #{commentTotal},
+		   	   yd.picture_total = #{pictureTotal},
+		   	   yd.video_total = #{videoTotal}
+		 where yd.access_date = #{accessDate}
+    </update>
+	
+</mapper>

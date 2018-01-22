@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="assets/lib/ztree/css/zTreeStyle/metro.css">
+<link rel="stylesheet" href="assets/lib/datetimepicker/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="assets/lib/bootstrap-table/bootstrap-table.min.css"/>
+<!-- Content -->
+<div ng-app="" id='content'>
+	<div style="margin:0px;" class="page-header">
+	  <h4>系统配置</h4>
+	</div>
+	<div class="col-lg-3">
+		<div style="margin:0px;" class="page-header">
+		  <h5>系统树
+		  	<div style="display:block;float:right;">
+			  	<button class='btn btn-default btn-sm' type='button' ng-click="addForm()">新增</button>
+			  	<button class='btn btn-default btn-sm' type='button' ng-click="deleteSystem()">删除</button>
+		  	</div>
+		  </h5>
+		</div>
+		<ul id="systemTree" class="ztree" style="height: 400px; overflow: auto;"></ul>
+	</div>
+	<div class="col-lg-9">
+		<div style="margin:0px;" class="page-header">
+		  <h5>系统信息</h5>
+		</div>
+		<div style="margin-top:10px;">
+			<form id="systemForm" class='form-horizontal'>
+				<input name="idSystem" type="hidden" ng-model="system.idSystem" disabled/>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>系统名称</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="systemName" type='text' ng-model="system.systemName">
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>系统编码</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="systemCode" type='text' ng-model="system.systemCode">
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>系统描述</label>
+					<div class="col-lg-5">
+						<textarea style="resize:none;" class="form-control" name="systemDesc" rows="4" ng-model="system.systemDesc"></textarea>
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-actions'>
+					<input type='submit' class='btn btn-default' ng-click="mergeSystem()" value="保存"></input>
+					<input type='reset' class='btn'></input>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

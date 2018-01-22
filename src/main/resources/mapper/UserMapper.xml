@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.simple.dao.UserDao">
+
+	<!-- 获取用户信息 -->
+	<select id="getUserById" parameterType="string" resultType="UserDO">
+		select * from sim_user where id_user = #{idUser}
+	</select>
+
+	<!-- 获取用户信息 -->
+	<select id="getUserByName" parameterType="string" resultType="UserDO">
+		select * from sim_user where user_name = #{userName}
+	</select>
+	
+	<!-- 用户分页查询 -->
+	<select id="pagingUsers" parameterType="UserDTO" resultType="UserDO">
+		select * from sim_user u
+		 <where>
+			 <if test='idGroup != null and idGroup != "0"'>
+			    and exists
+				 (select 1
+				          from sim_group_user gu
+				         where gu.id_user = u.id_user
+				           and find_in_set(gu.id_group, getGroupChildList(#{idGroup})))
+			 </if>
+			 <if test='keyWord != null'>
+			    and (user_name like concat('%',#{keyWord},'%') or user_nick like concat('%',#{keyWord},'%'))
+			 </if>
+			 <if test='startDate != null'>
+			    and date_format(created_date,'20%y-%m-%d') >= #{startDate} 
+			 </if>
+			 <if test='endDate != null'>
+			    and date_format(created_date,'20%y-%m-%d') >= #{endDate} 
+			 </if>
+			 <if test='sortName != null and sortOrder != null'>
+			    order by #{sortName} #{sortOrder}
+			 </if>
+		 </where>
+	</select>
+	
+	<!-- 统计用户数量 -->
+	<select id="countUsers" parameterType="list" resultType="Integer">
+		select count(*)
+		  from sim_user
+		 where date_format(created_date, '%Y%m%d') in
+		 <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+	        #{item}
+	     </foreach>
+	</select>
+	
+	<!-- 保存用户信息 -->
+	<insert id="saveUser" parameterType="UserDO">
+		<selectKey keyProperty="idUser" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_user
+		  (id_user,
+		   user_name,
+		   password,
+		   user_nick,
+		   gender,
+		   birthday,
+		   avatar_url,
+		   mobilephone,
+		   qq,
+		   email,
+		   address,
+		   feature,
+		   signature,
+		   salt,
+		   is_enabled,
+		   created_by,
+		   created_date,
+		   updated_by,
+		   updated_date)
+		values
+		  (#{idUser},
+		   #{userName},
+		   #{password},
+		   #{userNick},
+		   #{gender},
+		   #{birthday},
+		   #{avatarUrl},
+		   #{mobilephone},
+		   #{qq},
+		   #{email},
+		   #{address},
+		   #{feature},
+		   #{signature},
+		   #{salt},
+		   #{isEnabled},
+		   #{createdBy},
+		   sysdate(),
+		   #{updatedBy},
+		   sysdate())
+    </insert>
+    
+    <!-- 更新用户信息 -->
+    <update id="updateUser" parameterType="UserDO">
+    	update sim_user
+		   set user_name    = #{userName},
+		       password     = #{password},
+		       user_nick    = #{userNick},
+		       gender       = #{gender},
+		       birthday     = #{birthday},
+		       avatar_url   = #{avatarUrl},
+		       mobilephone  = #{mobilephone},
+		       qq           = #{qq},
+		       email        = #{email},
+		       address      = #{address},
+		       feature      = #{feature},
+		       signature    = #{signature},
+		       salt         = #{salt},
+		       is_enabled   = #{isEnabled},
+		       updated_by   = #{updatedBy},
+		       updated_date = sysdate()
+		 where id_user = #{idUser}
+    </update>
+	
+	<!-- 删除用户信息 -->
+	<delete id="deleteUser" parameterType="string">
+	    delete from sim_user where id_user = #{idUser}
+	</delete>
+	
+	<!-- 批量删除用户信息 -->
+	<delete id="batchDeleteUsers" parameterType="list">
+	    delete from sim_user where id_user in 
+	    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+	        #{item}  
+	    </foreach> 
+	</delete>
+	
+	<!-- 保存用户角色信息 -->
+	<insert id="saveUserRole" parameterType="UserRoleDO">
+		<selectKey keyProperty="idUserRole" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+		insert into sim_user_role
+		  (id_user_role,
+		   id_user,
+		   id_role,
+		   created_by,
+		   created_date,
+		   updated_by,
+		   updated_date)
+		values
+		  (#{idUserRole},
+		   #{idUser},
+		   #{idRole},
+		   #{createdBy},
+		   sysdate(),
+		   #{updatedBy},
+		   sysdate())
+	</insert>
+	
+	<!-- 删除用户角色信息 -->
+	<delete id="deleteUserRoleByIdUser">
+		delete from sim_user_role where id_user = #{idUser}
+	</delete>
+	
+	<!-- 批量删除用户角色信息 -->
+	<delete id="batchDeleteUserRolesByIdUsers">
+		delete from sim_user_role where id_user in 
+		<foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+	        #{item}  
+	    </foreach> 
+	</delete>
+	
+</mapper>

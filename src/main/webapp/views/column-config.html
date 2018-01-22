@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="assets/lib/ztree/css/zTreeStyle/metro.css">
+<link rel="stylesheet" href="assets/lib/datetimepicker/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="assets/lib/bootstrap-table/bootstrap-table.min.css"/>
+<!-- Content -->
+<div ng-app="" id='content'>
+	<div style="margin:0px;" class="page-header">
+	  <h4>栏目配置</h4>
+	</div>
+	<div class="col-lg-3">
+		<div style="margin:0px;" class="page-header">
+		  <h5>栏目树
+		  	<div style="display:block;float:right;">
+			  	<button class='btn btn-default btn-sm' type='button' ng-click="addForm()">新增</button>
+			  	<button class='btn btn-default btn-sm' type='button' ng-click="deleteColumn()">删除</button>
+		  	</div>
+		  </h5>
+		</div>
+		<ul id="columnTree" class="ztree" style="height: 400px; overflow: auto;"></ul>
+	</div>
+	<div class="col-lg-9">
+		<div style="margin:0px;" class="page-header">
+		  <h5>栏目信息</h5>
+		</div>
+		<div style="margin-top:10px;">
+			<form id="columnForm" class='form-horizontal'>
+				<input name="idColumn" type="hidden" ng-model="column.idColumn" disabled/>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>栏目名称</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="columnName" type='text' ng-model="column.columnName">
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>栏目编码</label>
+					<div class='col-lg-5'>
+						<input class='form-control' name="columnCode" type='text' ng-model="column.columnCode">
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-group'>
+					<label class='col-lg-1 control-label'>栏目描述</label>
+					<div class="col-lg-5">
+						<textarea style="resize:none;" class="form-control" name="columnDesc" rows="4" ng-model="column.columnDesc"></textarea>
+					</div>
+					<div class='col-lg-6'></div>
+				</div>
+				<div class='form-actions'>
+					<input type='submit' class='btn btn-default' ng-click="mergeColumn()" value="保存"></input>
+					<input type='reset' class='btn'></input>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

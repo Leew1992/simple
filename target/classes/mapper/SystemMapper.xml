@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.simple.dao.SystemDao">
+
+    <!-- 获取系统信息 -->
+    <select id="getSystemById" parameterType="string" resultType="SystemDO">
+        select * from sim_system where id_system = #{idSystem}
+    </select>
+    
+    <!-- 获取系统信息 -->
+    <select id="getSystemByIdParent" parameterType="string" resultType="SystemDO">
+        select * from sim_system where system_name = #{systemName}
+    </select>
+    
+    <!-- 系统列表查询 -->
+    <select id="listAllSystems" resultType="SystemDO">
+        select * from sim_system
+    </select>
+    
+    <!-- 获取系统树 -->
+    <select id="getSystemTree" resultType="TreeNode">
+        select id_system 	"id",
+               id_parent 	"pId",
+               system_name 	"name",
+               system_desc 	"desc",
+               true	as	"open"
+          from sim_system
+    </select>
+    
+    <!-- 获取系统树 -->
+    <select id="getSystemTreeByIdRole" parameterType="string" resultType="TreeNode">
+        select s.id_system 	"id",
+               s.id_parent 	"pId",
+               s.system_name 	"name",
+               s.system_desc 	"desc",
+               true	as	"open"
+          from sim_system s
+          	join sim_role_system rs on s.id_system = rs.id_system
+         where rs.id_role = #{idRole}
+    </select>
+    
+    <!-- 获取系统树 -->
+    <select id="getHasCheckedSystemTreeByIdMenu" parameterType="string" resultType="TreeNode">
+        select id_system 	"id",
+               id_parent 	"pId",
+               system_name 	"name",
+               system_desc 	"desc",
+               true	as	"open",
+               case
+                 when id_system in (select sm.id_system
+                                      from sim_system_menu sm
+                                     where sm.id_menu = #{idMenu}) then
+                  true
+                 else
+                  false
+               end "checked"
+          from sim_system
+    </select>
+    
+    <!-- 获取系统树 -->
+    <select id="getHasCheckedSystemTreeByIdRole" parameterType="string" resultType="TreeNode">
+        select id_system 	"id",
+               id_parent 	"pId",
+               system_name 	"name",
+               system_desc 	"desc",
+               true	as	"open",
+               case
+                 when id_system in (select rs.id_system
+                                      from sim_role_system rs
+                                     where rs.id_role = #{idRole}) then
+                  true
+                 else
+                  false
+               end "checked"
+          from sim_system
+    </select>
+    
+    <!-- 保存系统信息 -->
+    <insert id="saveSystem" parameterType="SystemDO">
+    	<selectKey keyProperty="idSystem" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_system
+          (id_system,
+           id_parent,
+           system_name,
+           system_code,
+           system_desc,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idSystem},
+           #{idParent},
+           #{systemName},
+           #{systemCode},
+           #{systemDesc},
+           #{createdBy},
+           sysdate(),
+           #{updatedBy},
+           sysdate())
+    </insert>
+    
+    <!-- 更新系统信息 -->
+    <update id="updateSystem" parameterType="SystemDO">
+        update sim_system
+		   set system_name  = #{systemName},
+		   	   system_code  = #{systemCode},
+		       system_desc  = #{systemDesc},
+		       updated_by   = #{updatedBy},
+		       updated_date = sysdate()
+		 where id_system = #{idSystem}
+    </update>
+    
+    <!-- 删除系统信息 -->
+    <delete id="deleteSystem" parameterType="string">
+        delete from sim_system where id_system = #{idSystem}
+    </delete>
+    
+    <!-- 批量删除系统信息 -->
+    <delete id="batchDeleteSystems" parameterType="list">
+        delete from sim_system where id_system in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+    <!-- 获取系统菜单信息 -->
+    <select id="getSystemMenuByIdMenu" parameterType="string" resultType="SystemDO">
+        select * from sim_system_menu where id_menu = #{idMenu}
+    </select>
+    
+    <!-- 保存系统菜单信息 -->
+    <insert id="saveSystemMenu" parameterType="SystemMenuDO">
+    	<selectKey keyProperty="idSystemMenu" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_system_menu
+          (id_system_menu,
+           id_system,
+           id_menu,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idSystemMenu},
+           #{idSystem},
+           #{idMenu},
+           #{createdBy},
+           sysdate(),
+           #{updatedBy},
+           sysdate())
+    </insert>
+    
+    <!-- 删除系统菜单信息 -->
+    <delete id="deleteSystemMenuByIdSystem" parameterType="string">
+        delete from sim_system_menu where id_system = #{idSystem}
+    </delete>
+    
+    <!-- 删除系统菜单信息 -->
+    <delete id="deleteSystemMenuByIdMenu" parameterType="string">
+        delete from sim_system_menu where find_in_set(id_menu, getMenuChildList(#{idMenu}))
+    </delete>
+    
+    <!-- 批量删除系统菜单信息 -->
+    <delete id="batchDeleteSystemMenus" parameterType="list">
+        delete from sim_system_menu where id_system in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+</mapper>

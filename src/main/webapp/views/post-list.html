@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="assets/lib/ztree/css/zTreeStyle/metro.css">
+<link rel="stylesheet" href="assets/lib/datetimepicker/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="assets/lib/bootstrap-table/bootstrap-table.min.css"/>
+<div id='content'>
+	<div style="margin:0px;" class="page-header">
+	  <h4>贴子列表</h4>
+	</div>
+	<div class="col-lg-3">
+		<div class='panel-body text-center'>
+			<ul id="columnTree" class="ztree" style="overflow: auto;"></ul>
+		</div>
+	</div>
+	<div class="col-lg-9">
+		<!-- 贴子列表 -->
+		<div style="margin:15px;margin-bottom:0px;" class='row'>
+			<form class='form-horizontal'>
+				<div class='col-md-3'>
+					<div class="form-group">
+						<input style="width:160px;cursor:pointer;" size="16" type="text" placeholder='开始时间' readonly class="form-control start-date">
+					</div>
+				</div>
+				<div class='col-md-3'>
+					<div class="form-group">
+						<input style="width:160px;cursor:pointer;" size="16" type="text" placeholder='结束时间' readonly class="form-control end-date">
+					</div>
+				</div>
+				<div class='col-md-6'>
+					<div class='input-group'>
+						<input type="text" class="form-control keyWord" name="keyWord" placeholder="贴子名称">
+					    <span class="input-group-btn">
+					        <button class="btn btn-default" type="button" ng-click="searchPost()">查询</button>
+					        <button class="btn btn-default" type="button" ng-click="addPost()">新增</button>
+					    </span>
+					</div>
+				</div>
+			</form>
+		</div>
+		<table id="postTable" data-classes="table table-no-bordered"></table>
+	</div>
+</div>

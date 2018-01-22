@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.simple.dao.GroupDao">
+
+    <!-- 获取分组信息 -->
+    <select id="getGroupById" parameterType="string" resultType="GroupDO">
+        select * from sim_group where id_group = #{idGroup}
+    </select>
+    
+    <!-- 获取分组信息 -->
+    <select id="listGroupsByIdParent" parameterType="string" resultType="GroupDO">
+        select * from sim_group where id_parent = #{idParent}
+    </select>
+    
+    <!-- 分组列表查询 -->
+    <select id="listAllGroups" resultType="GroupDO">
+        select * from sim_group
+    </select>
+    
+    <!-- 获取分组树 -->
+    <select id="getGroupTree" resultType="TreeNode">
+        select id_group 	"id",
+		       id_parent 	"pId",
+		       group_name 	"name",
+		       group_desc 	"desc",
+		       true 	as	"open"
+		  from sim_group
+    </select>
+    
+    <!-- 获取分组树 -->
+    <select id="getHasCheckedGroupTreeByIdUser" parameterType="string" resultType="TreeNode">
+        select id_group 	"id",
+		       id_parent 	"pId",
+		       group_name "name",
+		       group_desc "desc",
+		       true   as  "open",
+		       case
+		         when id_group in
+		              (select gu.id_group
+		                 from sim_group_user gu
+		                where gu.id_user = #{idUser}) then
+		          true
+		         else
+		          false
+		       end "checked"
+		  from sim_group
+    </select>
+    
+    <!-- 获取分组树 -->
+    <select id="getHasCheckedGroupTreeByIdRole" parameterType="string" resultType="TreeNode">
+        select id_group "id",
+		       id_parent "pId",
+		       group_name "name",
+		       group_desc "desc",
+		       true   as  "open",
+		       case
+		         when id_group in
+		              (select gu.id_group
+		                 from sim_group_role gu
+		                where gu.id_role = #{idRole}) then
+		          true
+		         else
+		          false
+		       end "checked"
+		  from sim_group
+    </select>
+    
+    <!-- 保存分组信息 -->
+    <insert id="saveGroup" parameterType="GroupDO">
+    	<selectKey keyProperty="idGroup" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_group
+          (id_group,
+           id_parent,
+           group_name,
+           group_code,
+           group_desc,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idGroup},
+           #{idParent},
+           #{groupName},
+           #{groupCode},
+           #{groupDesc},
+           #{createdBy},
+           sysdate(),
+           #{updatedBy},
+           sysdate())
+    </insert>
+    
+    <!-- 更新分组信息 -->
+    <update id="updateGroup" parameterType="GroupDO">
+        update sim_group
+           set group_name    = #{groupName},
+               group_code    = #{groupCode},
+               group_desc    = #{groupDesc},
+               updated_by   = #{updatedBy},
+               updated_date = sysdate()
+         where id_group = #{idGroup}
+    </update>
+    
+    <!-- 删除分组信息 -->
+    <delete id="deleteGroup" parameterType="string">
+        delete from sim_group where id_group = #{idGroup}
+    </delete>
+    
+    <!-- 批量删除分组信息 -->
+    <delete id="batchDeleteGroups" parameterType="list">
+        delete from sim_group where id_group in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+    <!-- 获取分组用户列表 -->
+    <select id="listGroupUsersByIdUser" parameterType="string" resultType="GroupUserDO">
+        select * from sim_group_user where id_user = #{idUser}
+    </select>
+    
+    <!-- 保存分组用户信息 -->
+    <insert id="saveGroupUser" parameterType="GroupUserDO">
+    	<selectKey keyProperty="idGroupUser" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_group_user
+          (id_group_user,
+           id_group,
+           id_user,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idGroupUser},
+           #{idGroup},
+           #{idUser},
+           #{createdBy},
+           sysdate(),
+           #{updatedBy},
+           sysdate())
+    </insert>
+    
+    <!-- 删除分组用户信息 -->
+    <delete id="deleteGroupUserByIdUser">
+        delete from sim_group_user where id_user = #{idUser}
+    </delete>
+    
+    <!-- 批量删除分组用户信息 -->
+    <delete id="batchDeleteGroupsUserByIdUser">
+        delete from sim_group_user where id_user in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+     <!-- 获取用户角色列表-->
+    <select id="listGroupRolesByIdRole" parameterType="string" resultType="GroupRoleDO">
+        select * from sim_group_role where id_role = #{idRole}
+    </select>
+    
+    <!-- 保存用户角色信息 -->
+    <insert id="saveGroupRole" parameterType="GroupRoleDO">
+    	<selectKey keyProperty="idGroupRole" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_group_role
+          (id_group_role,
+           id_group,
+           id_role,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idGroupRole},
+           #{idGroup},
+           #{idRole},
+           #{createdBy},
+           sysdate(),
+           #{updatedBy},
+           sysdate())
+    </insert>
+    
+    <!-- 删除用户角色信息 -->
+    <delete id="deleteGroupRoleByIdRole">
+        delete from sim_group_role where id_role = #{idRole}
+    </delete>
+    
+    <!-- 批量删除用户角色信息 -->
+    <delete id="batchDeleteGroupRolesByIdRole">
+        delete from sim_group_role where id_role in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+</mapper>

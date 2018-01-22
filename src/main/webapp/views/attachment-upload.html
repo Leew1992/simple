@@ -1,0 +1,28 @@
+<div ng-app="" id='content'>
+	<div style="margin:0px;margin-bottom: 15px;" class="page-header">
+	  <h4>附件上传</h4>
+	</div>
+	<div class="col-lg-12">
+		<div class="btn-group" data-toggle="buttons">
+		    <label class="btn btn-default active" ng-click="renderLoginAccess('day', 7)">
+		        <input type="radio" autocomplete="off" checked> 今日
+		    </label>
+		    <label class="btn btn-default" ng-click="renderLoginAccess('week', 6)">
+		    	<input type="radio" autocomplete="off"> 本周
+		    </label>
+		    <label class="btn btn-default" ng-click="renderLoginAccess('month', 6)">
+		    	<input type="radio" autocomplete="off"> 本月
+		    </label>
+		    <label class="btn btn-default" ng-click="renderLoginAccess('year', 3)">
+		    	<input type="radio" autocomplete="off"> 总
+		    </label>
+		</div>
+	</div>
+	<div class="col-lg-6">
+		<canvas id="PieChart" width="400" height="300"></canvas>
+	</div>
+	<div class="col-lg-6">
+		<canvas id="LineChart" width="400" height="300"></canvas>
+	</div>
+	
+</div>

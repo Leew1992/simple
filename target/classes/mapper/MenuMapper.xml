@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.simple.dao.MenuDao">
+
+    <!-- 获取菜单信息 -->
+    <select id="getMenuById" parameterType="string" resultType="MenuDO">
+        select * from sim_menu where id_menu = #{idMenu}
+    </select>
+    
+    <!-- 获取菜单信息 -->
+    <select id="getMenuDetailById" parameterType="string" resultType="MenuDTO">
+        select m.id_menu,
+        	   m.id_parent,
+        	   (select menu_name from sim_menu where id_menu = m.id_parent) "parentMenuName",
+        	   m.menu_name,
+        	   m.menu_code,
+        	   m.menu_url,
+        	   m.menu_desc
+         from sim_menu m where id_menu = #{idMenu}
+    </select>
+    
+    <!-- 获取菜单列表 -->
+    <select id="listMenusByIdParent" parameterType="string" resultType="MenuDO">
+        select * from sim_menu where id_parent = #{idParent}
+    </select>
+    
+    <!-- 获取菜单列表 -->
+    <select id="listMenusByIdSystem" parameterType="string" resultType="MenuDO">
+        select m.* from sim_menu m
+		  left join sim_system_menu sm
+		    on m.id_menu = sm.id_menu
+		 where find_in_set(sm.id_system, getSystemChildList(#{idSystem}))
+    </select>
+    
+    <!-- 查询菜单列表信息 -->
+    <select id="listMenusByIdRole" parameterType="string" resultType="MenuDO">
+        select m.* from sim_menu m, sim_role_menu rm
+		 where m.id_menu = rm.id_menu
+           and id_role = #{idRole}
+    </select>
+    
+    <!-- 获取所有菜单 -->
+    <select id="listAllMenus" parameterType="string" resultType="MenuDO">
+        select * from sim_menu
+    </select>
+    
+    <!-- 查询菜单树信息 -->
+    <select id="getAssignedMenuTreeForMenuAssign" parameterType="Map" resultType="TreeNode">
+    	select m.id_menu   "id",
+		       m.id_parent "pId",
+		       m.menu_name "name",
+		       m.menu_desc "desc",
+		       true   as  "open",
+		       case when m.id_menu in (select rm.id_menu from sim_role_menu rm where rm.id_role = #{idRole}) then
+		          true
+		         else
+		          false
+		       end "checked"
+		  from sim_menu m 
+		  	join sim_system_menu sm on m.id_menu = sm.id_menu
+		  	join sim_role_system rs on sm.id_system = rs.id_system
+		 where rs.id_role = #{idRole}
+    </select>
+    
+    <!-- 查询菜单树信息 -->
+    <select id="getHasCheckedMenuTreeByIdRoleAndIdSystem" parameterType="Map" resultType="TreeNode">
+    	select m.id_menu   "id",
+		       m.id_parent "pId",
+		       m.menu_name "name",
+		       m.menu_desc "desc",
+		       true   as  "open",
+		       case when m.id_menu in (select rm.id_menu from sim_role_menu rm where rm.id_role = #{idRole}) then
+		          true
+		         else
+		          false
+		       end "checked"
+		  from sim_menu m 
+		  	join sim_system_menu sm on m.id_menu = sm.id_menu
+		  	join sim_role_system rs on sm.id_system = rs.id_system
+		 where rs.id_role = #{idRole}
+		 	and rs.id_system = #{idSystem}
+    </select>
+    
+    <!-- 查询菜单树信息 -->
+    <select id="getHasCheckedMenuTreeByIdSystemAndIdMenu" parameterType="Map" resultType="TreeNode">
+    	select m.id_menu "id",
+		       m.id_parent "pId",
+		       m.menu_name "name",
+		       m.menu_desc "desc",
+		       true   as  "open",
+		       case when m.id_menu = #{idMenu} then
+		          true
+		         else
+		          false
+		       end "checked"
+		  from sim_menu m 
+		  left join sim_system_menu sm on sm.id_menu = m.id_menu 
+		  left join sim_system s on s.id_system = sm.id_system 
+		 where s.id_system =#{idSystem}
+    </select>
+    
+    <!-- 保存菜单信息 -->
+    <insert id="saveMenu" parameterType="MenuDO">
+    	<selectKey keyProperty="idMenu" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_menu
+          (id_menu,
+           id_parent,
+           menu_name,
+           menu_code,
+           menu_desc,
+           menu_url,
+		   is_enabled,
+           created_by,
+           created_date,
+           updated_by,
+           updated_date)
+        values
+          (#{idMenu},
+           #{idParent},
+           #{menuName},
+           #{menuCode},
+           #{menuDesc},
+           #{menuUrl},
+           #{isEnabled},
+           #{createdBy},
+           sysdate(),
+           #{updatedBy},
+           sysdate())
+    </insert>
+    
+    <!-- 更新菜单信息 -->
+    <update id="updateMenu" parameterType="MenuDO">
+        update sim_menu
+           set menu_name    = #{menuName},
+               menu_url     = #{menuUrl},
+               menu_code    = #{menuCode},               
+               menu_desc    = #{menuDesc},
+               is_enabled   = #{isEnabled},
+               updated_by   = #{updatedBy},
+               updated_date = sysdate()
+         where id_menu = #{idMenu}
+    </update>
+    
+    <!-- 更新菜单状态 -->
+    <update id="updateMenuEnabled" parameterType="Map">
+        update sim_menu set is_enabled = #{isEnabled} where id_menu = #{idMenu}
+    </update>
+    
+    <!-- 批量更新菜单状态 -->
+    <update id="batchUpdateMenuEnableds" parameterType="Map">
+        update sim_menu set is_enabled = #{isEnabled} where id_menu in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+	        #{item}  
+	    </foreach>
+    </update>
+    
+    <!-- 删除菜单信息 -->
+    <delete id="deleteMenu" parameterType="string">
+        delete from sim_menu where find_in_set(id_menu, getMenuChildList(#{idMenu}))
+    </delete>
+    
+    <!-- 批量删除菜单信息 -->
+    <delete id="batchDeleteMenus" parameterType="list">
+        delete from sim_menu where id_menu in 
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach> 
+    </delete>
+    
+</mapper>

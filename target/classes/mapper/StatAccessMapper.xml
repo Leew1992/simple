@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.simple.dao.StatAccessDao">
+
+	<!-- 列出日访问数据 -->
+	<select id="listStatDayAccesses" parameterType="Map" resultType="StatDayAccessDO">
+		select * from sim_stat_day_access
+		 <where>
+		  	 <if test='idUser != null'>
+		  	     id_user = #{idUser}		
+		  	 </if>
+		  	 <if test='accessModule != null'>
+		  	 	 and access_module = #{accessModule}
+		  	 </if>
+		  	 <if test='accessDate != null'>
+		  	 	 and access_date = #{accessDate}
+		  	 </if>
+		 </where>
+	</select>
+	
+	<!-- 列出周访问数据 -->
+	<select id="listStatWeekAccesses" parameterType="Map" resultType="StatWeekAccessDO">
+		select * from sim_stat_week_access
+		 <where>
+		 	 <if test='idUser != null'>
+		 	 	 id_user = #{idUser}
+		 	 </if>
+		 	 <if test='accessModule != null'>
+		 	 	 and access_module = #{accessModule}
+		 	 </if>
+		 	 <if test='accessDate != null'>
+		 	 	 and access_date = #{accessDate}
+		 	 </if>
+		 </where>
+	</select>
+	
+	<!-- 列出月访问数据 -->
+	<select id="listStatMonthAccesses" parameterType="Map" resultType="StatMonthAccessDO">
+		select * from sim_stat_month_access
+		 <where>
+		 	 <if test='idUser != null'>
+		 	 	 id_user = #{idUser}
+		 	 </if>
+		 	 <if test='accessModule != null'>
+		 	 	 and access_module = #{accessModule}
+		 	 </if>
+		 	 <if test='accessDate != null'>
+		 	 	 and access_date = #{accessDate}
+		 	 </if>
+		 </where>
+	</select>
+	
+	<!-- 列出年访问数据 -->
+	<select id="listStatYearAccesses" parameterType="Map" resultType="StatYearAccessDO">
+		select * from sim_stat_year_access
+		 <where>
+		 	 <if test='idUser != null'>
+		 	 	 id_user = #{idUser}
+		 	 </if>
+		 	 <if test='accessModule != null'>
+		 	 	 and access_module = #{accessModule}
+		 	 </if>
+		 	 <if test='accessDate != null'>
+		 	 	 and access_date = #{accessDate}
+		 	 </if>
+		 </where>
+	</select>
+	
+	<!-- 分页获取日访问数据 -->
+	<select id="pagingStatDayAccesses" parameterType="StatDayAccessDTO" resultType="StatDayAccessDO">
+		select * from sim_stat_day_access
+		    <where>
+		        <if test='startDate != null'>
+				    date_format(created_date,'20%y-%m-%d') >= #{startDate} 
+				</if>
+				<if test='endDate != null'>
+				    and date_format(created_date,'20%y-%m-%d') >= #{endDate} 
+				</if>
+				<if test='sortName != null and sortOrder != null'>
+				    order by #{sortName} #{sortOrder}
+				</if>
+		    </where>
+	</select>
+	
+	<!-- 分页获取周访问数据 -->
+	<select id="pagingStatWeekAccesses" parameterType="StatWeekAccessDTO" resultType="StatWeekAccessDO">
+		select * from sim_stat_week_access
+			<where>
+				<if test='startDate != null'>
+				    date_format(created_date,'20%y-%m-%d') >= #{startDate} 
+				 </if>
+				 <if test='endDate != null'>
+				    and date_format(created_date,'20%y-%m-%d') >= #{endDate} 
+				 </if>
+				 <if test='sortName != null and sortOrder != null'>
+				    order by #{sortName} #{sortOrder}
+				 </if>
+			</where>
+	</select>
+	
+	<!-- 分页获取月访问数据 -->
+	<select id="pagingStatMonthAccesses" parameterType="StatMonthAccessDTO" resultType="StatMonthAccessDO">
+		select * from sim_stat_month_access
+		    <where>
+				<if test='startDate != null'>
+				    date_format(created_date,'20%y-%m-%d') >= #{startDate} 
+				 </if>
+				 <if test='endDate != null'>
+				    and date_format(created_date,'20%y-%m-%d') >= #{endDate} 
+				 </if>
+				 <if test='sortName != null and sortOrder != null'>
+				    order by #{sortName} #{sortOrder}
+				 </if>
+			</where>
+	</select>
+	
+	<!-- 分页获取年访问数据-->
+	<select id="pagingStatYearAccesses" parameterType="StatYearAccessDTO" resultType="StatYearAccessDO">
+		select * from sim_stat_year_access
+		    <where>
+				<if test='startDate != null'>
+				    date_format(created_date,'20%y-%m-%d') >= #{startDate} 
+				 </if>
+				 <if test='endDate != null'>
+				    and date_format(created_date,'20%y-%m-%d') >= #{endDate} 
+				 </if>
+				 <if test='sortName != null and sortOrder != null'>
+				    order by #{sortName} #{sortOrder}
+				 </if>
+			</where>
+	</select>
+	
+	<!-- 统计年访问数据 -->
+	<select id="countStatYearAccess" parameterType="map" resultType="Integer">
+		select ifnull(sum(access_count), 0)
+		  from sim_stat_year_access
+		 <where>
+		 	 <if test='dates != null'>
+		 	 	 <foreach collection="dates" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}  
+			     </foreach>
+		 	 </if>
+		 	 <if test='accessModule != null'>
+		 	 	 and access_module = #{accessModule}
+		 	 </if>
+		 </where>
+	</select>
+	
+	<!-- 列出日访问统计数据 -->
+	<select id="listStatDayAccessCounts" parameterType="string" resultType="Map">
+		select concat(access_module, 'Total') "accessModule",
+		       sum(access_count) "accessCount"
+		  from sim_stat_day_access
+		 where access_date = #{accessDate}
+		 group by access_module
+	</select>
+	
+	<!-- 列出周访问统计数据 -->
+	<select id="listStatWeekAccessCounts" parameterType="string" resultType="Map">
+		select concat(access_module, 'Total') "accessModule",
+			   sum(access_count) "accessCount"
+		  from sim_stat_week_access
+		 where access_date = #{accessDate}
+		 group by access_module
+	</select>
+	
+	<!-- 列出月访问统计数据 -->
+	<select id="listStatMonthAccessCounts" parameterType="string" resultType="Map">
+		select concat(access_module, 'Total') "accessModule",
+			   sum(access_count) "accessCount"
+		  from sim_stat_month_access
+		 where access_date = #{accessDate}
+		 group by access_module
+	</select>
+	
+	<!-- 列出年访问统计数据 -->
+	<select id="listStatYearAccessCounts" parameterType="string" resultType="Map">
+		select concat(access_module, 'Total') "accessModule",
+			   sum(access_count) "accessCount"
+		  from sim_stat_year_access
+		 where access_date = #{accessDate}
+		 group by access_module
+	</select>
+	
+    <!-- 保存日访问数据 -->
+	<insert id="saveStatDayAccess" parameterType="StatDayAccessDO">
+		<selectKey keyProperty="idStatDayAccess" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_stat_day_access
+		  (id_stat_day_access,
+		   id_user,
+		   access_module,
+		   access_count,
+		   last_increase,
+		   access_date,
+		   created_by,
+		   created_date,
+		   updated_by,
+		   updated_date)
+		values
+		  (#{idStatDayAccess},
+		   #{idUser},
+		   #{accessModule},
+		   #{accessCount},
+		   #{lastIncrease},
+		   #{accessDate},
+		   #{createdBy},
+		   sysdate(),
+		   #{updatedBy},
+		   sysdate())
+    </insert>
+    
+    <!-- 保存周访问统计数据 -->
+	<insert id="saveStatWeekAccess" parameterType="StatWeekAccessDO">
+		<selectKey keyProperty="idStatWeekAccess" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_stat_week_access
+		  (id_stat_week_access,
+		   id_user,
+		   access_module,
+		   access_count,
+		   access_date,
+		   created_by,
+		   created_date,
+		   updated_by,
+		   updated_date)
+		values
+		  (#{idStatWeekAccess},
+		   #{idUser},
+		   #{accessModule},
+		   #{accessCount},
+		   #{accessDate},
+		   #{createdBy},
+		   sysdate(),
+		   #{updatedBy},
+		   sysdate())
+    </insert>
+    
+    <!-- 保存月访问统计数据 -->
+	<insert id="saveStatMonthAccess" parameterType="StatMonthAccessDO">
+		<selectKey keyProperty="idStatMonthAccess" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_stat_month_access
+		  (id_stat_month_access,
+		   id_user,
+		   access_module,
+		   access_count,
+		   access_date,
+		   created_by,
+		   created_date,
+		   updated_by,
+		   updated_date)
+		values
+		  (#{idStatMonthAccess},
+		   #{idUser},
+		   #{accessModule},
+		   #{accessCount},
+		   #{accessDate},
+		   #{createdBy},
+		   sysdate(),
+		   #{updatedBy},
+		   sysdate())
+    </insert>
+    
+    <!-- 保存年访问统计数据 -->
+	<insert id="saveStatYearAccess" parameterType="StatYearAccessDO">
+		<selectKey keyProperty="idStatYearAccess" resultType="string" order="BEFORE">
+           select replace(uuid(),'-','')
+		</selectKey>
+        insert into sim_stat_year_access
+		  (id_stat_year_access,
+		   id_user,
+		   access_module,
+		   access_count,
+		   access_date,
+		   created_by,
+		   created_date,
+		   updated_by,
+		   updated_date)
+		values
+		  (#{idStatYearAccess},
+		   #{idUser},
+		   #{accessModule},
+		   #{accessCount},
+		   #{accessDate},
+		   #{createdBy},
+		   sysdate(),
+		   #{updatedBy},
+		   sysdate())
+    </insert>
+    
+    <!-- 增加日访问数量 -->
+    <update id="increaseStatDayAccess" parameterType="StatDayAccessDO">
+		update sim_stat_day_access
+		   set access_count = access_count + #{accessCount},
+		       last_increase = last_increase + #{lastIncrease}
+		 <where>
+		 	 <if test='idUser != null'>
+		 	 	 id_user = #{idUser}
+		 	 </if>
+		 	 <if test='accessModule != null'>
+		 	 	 and access_module = #{accessModule}
+		 	 </if>
+		 	 <if test='accessDate != null'>
+		 	 	 and access_date = #{accessDate}
+		 	 </if>
+		 </where>
+    </update>
+    
+    <!-- 增加周访问数量 -->
+    <update id="increaseStatWeekAccess" parameterType="StatDayAccessDO">
+		update sim_stat_week_access
+		   set access_count = access_count + #{lastIncrease}
+		 <where>
+		 	 <if test='idUser != null'>
+		 	 	 id_user = #{idUser}
+		 	 </if>
+		 	 <if test='accessModule != null'>
+		 	 	 and access_module = #{accessModule}
+		 	 </if>
+		 	 <if test='accessDate != null'>
+		 	 	 and access_date = #{accessDate}
+		 	 </if>
+		 </where>
+    </update>
+    
+    <!-- 增加月访问数量 -->
+    <update id="increaseStatMonthAccess" parameterType="StatDayAccessDO">
+		update sim_stat_month_access
+		   set access_count  = access_count + #{lastIncrease}
+		 <where>
+		 	 <if test='idUser != null'>
+		 	 	 id_user = #{idUser}
+		 	 </if>
+		 	 <if test='accessModule != null'>
+		 	 	 and access_module = #{accessModule}
+		 	 </if>
+		 	 <if test='accessDate != null'>
+		 	 	 and access_date = #{accessDate}
+		 	 </if>
+		 </where>
+    </update>
+    
+    <!-- 增加年访问数量 -->
+    <update id="increaseStatYearAccess" parameterType="StatDayAccessDO">
+		update sim_stat_year_access
+		   set access_count = access_count + #{lastIncrease}
+		 <where>
+		 	 <if test='idUser != null'>
+		 	 	 id_user = #{idUser}
+		 	 </if>
+		 	 <if test='accessModule != null'>
+		 	 	 and access_module = #{accessModule}
+		 	 </if>
+		 	 <if test='accessDate != null'>
+		 	 	 and access_date = #{accessDate}
+		 	 </if>
+		 </where>
+    </update>
+    
+    <!-- 清除日访问增量数据 -->
+    <update id="clearStatDayAccessIncreament" parameterType="list">
+    	update sim_stat_day_access
+		   set last_increase = 0
+		 <where>
+		 	 <if test='list != null'>
+		 	 	 id_stat_day_access in
+		 	 	 <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}  
+			     </foreach>
+		 	 </if>
+		 </where>
+    </update>
+    
+	<!-- 删除日访问数据 -->
+	<delete id="deleteStatDayAccess" parameterType="string">
+	    delete from sim_stat_day_access
+		 where id_stat_day_access = #{idStatDayAccess}
+	</delete>
+	
+	<!-- 删除周访问数据 -->
+	<delete id="deleteStatWeekAccess" parameterType="string">
+	    delete from sim_stat_week_access
+	     where id_stat_week_access = #{idStatWeekAccess}
+	</delete>
+	
+	<!-- 删除月访问数据 -->
+	<delete id="deleteStatMonthAccess" parameterType="string">
+	    delete from sim_stat_month_access
+	     where id_stat_month_access = #{idStatMonthAccess}
+	</delete>
+	
+	<!-- 删除年访问数据 -->
+	<delete id="deleteStatYearAccess" parameterType="string">
+	    delete from sim_stat_year_access 
+	     where id_stat_year_access = #{idStatYearAccess}
+	</delete>
+	
+	<!-- 批量删除日访问数据 -->
+	<delete id="batchDeleteStatDayAccesses" parameterType="list">
+	    delete from sim_stat_day_access
+	     where id_stat_day_access in
+	     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+	         #{item}  
+	     </foreach> 
+	</delete>
+	
+	<!-- 批量删除周访问数据 -->
+	<delete id="batchDeleteStatWeekAccesses" parameterType="list">
+	    delete from sim_stat_week_access 
+	     where id_stat_week_access in 
+	     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+	         #{item}  
+	     </foreach> 
+	</delete>
+	
+	<!-- 批量删除月访问数据 -->
+	<delete id="batchDeleteStatMonthAccesses" parameterType="list">
+	    delete from sim_stat_month_access
+	     where id_stat_month_access in
+	     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+	         #{item}
+	     </foreach> 
+	</delete>
+	
+	<!-- 批量删除年访问数据 -->
+	<delete id="batchDeleteStatYearAccesses" parameterType="list">
+	    delete from sim_stat_year_access
+	     where id_stat_year_access in
+	     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+	         #{item}  
+	     </foreach> 
+	</delete>
+	
+	<!-- 分组统计日访问数量 -->
+	<select id="countStatDayAccessesDividedByAccessDate" parameterType="map" resultType="Integer">
+		select ifnull(sum(access_count),0)
+			from sim_stat_day_access
+		 <where>
+		 	 <if test='dates != null'>
+			 	 access_date in		 
+				 <foreach collection="dates" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}
+			     </foreach>
+		 	 </if>
+		     <if test='modules != null'>
+		     	 and access_module in
+		     	 <foreach collection="modules" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}
+			     </foreach>
+		     </if>
+		 </where>
+	     group by access_date
+	</select>
+	
+	<!-- 分组统计日访问数量 -->
+	<select id="countStatDayAccessesDividedByAccessModule" parameterType="map" resultType="Integer">
+		select ifnull(sum(access_count),0)
+			from sim_stat_day_access
+		 <where>
+		 	 <if test='dates != null'>
+			 	 access_date in		 
+				 <foreach collection="dates" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}
+			     </foreach>
+		 	 </if>
+		     <if test='modules != null'>
+		     	 and access_module in
+		     	 <foreach collection="modules" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}
+			     </foreach>
+		     </if>
+		 </where>
+	     group by access_module
+	</select>
+	
+	<!-- 分组统计周访问数量 -->
+	<select id="countStatWeekAccessesDividedByAccessModule" parameterType="map" resultType="Integer">
+		select ifnull(sum(access_count),0)
+			from sim_stat_week_access
+		 <where>
+		 	 <if test='dates != null'>
+			 	 access_date in
+			 	 <foreach collection="dates" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}
+			     </foreach>
+		 	 </if>
+		 	 <if test='modules != null'>
+		 	 	 and access_module in
+		 	 	 <foreach collection="modules" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}
+			     </foreach>
+		 	 </if>
+		 </where>
+	     group by access_module
+	</select>
+	
+	<!-- 分组统计月访问数量 -->
+	<select id="countStatMonthAccessesDividedByAccessModule" parameterType="map" resultType="Integer">
+		select ifnull(sum(access_count),0)
+			from sim_stat_month_access
+		 <where>
+		 	 <if test='dates != null'>
+			 	 access_date in
+			 	 <foreach collection="dates" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}
+			     </foreach>
+		 	 </if>
+		 	 <if test='modules != null'>
+		 	 	 and access_module in
+		 	 	 <foreach collection="modules" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}
+			     </foreach>
+		 	 </if>
+		 </where>
+	     group by access_module
+	</select>
+	
+	<!-- 分组统计年访问数量 -->
+	<select id="countStatYearAccessesDividedByAccessModule" parameterType="map" resultType="Integer">
+		select ifnull(sum(access_count),0)
+			from sim_stat_year_access
+		 <where>
+		 	 <if test='dates != null'>
+			 	 access_date in
+			 	 <foreach collection="dates" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}
+			     </foreach>
+		 	 </if>
+		 	 <if test='modules != null'>
+		 	 	 and access_module in
+		 	 	 <foreach collection="modules" index="index" item="item" open="(" separator="," close=")">  
+			         #{item}
+			     </foreach>
+		 	 </if>
+		 </where>
+	     group by access_module
+	</select>
+	
+</mapper>
