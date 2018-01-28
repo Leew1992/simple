@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class SignedUsernamePasswordAuthenticationProvider extends DaoAuthenticationProvider {
 	@Override
 	public boolean supports(Class<? extends Object> authentication) {
-		return (SignedUsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
+		return SignedUsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
 	}
 
 	@Override

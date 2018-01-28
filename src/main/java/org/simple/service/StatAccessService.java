@@ -60,22 +60,22 @@ public interface StatAccessService {
 	/**
 	 * 保存日访问数据
 	 */
-	ResultDTO saveStatDayAccess(StatDayAccessDO StatDayAccessDO);
+	ResultDTO saveStatDayAccess(StatDayAccessDO statDayAccessDO);
 
 	/**
 	 * 保存周访问数据
 	 */
-	ResultDTO saveStatWeekAccess(StatWeekAccessDO StatWeekAccessDO);
+	ResultDTO saveStatWeekAccess(StatWeekAccessDO statWeekAccessDO);
 
 	/**
 	 * 保存月访问数据
 	 */
-	ResultDTO saveStatMonthAccess(StatMonthAccessDO StatMonthAccessDO);
+	ResultDTO saveStatMonthAccess(StatMonthAccessDO statMonthAccessDO);
 
 	/**
 	 * 保存年访问数据
 	 */
-	ResultDTO saveStatYearAccess(StatYearAccessDO StatYearAccessDO);
+	ResultDTO saveStatYearAccess(StatYearAccessDO statYearAccessDO);
 
 	/**
 	 * 增加日访问数量

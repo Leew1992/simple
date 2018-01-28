@@ -11,8 +11,9 @@ import org.simple.entity.MenuDO;
  */
 public class UserCache {
 	
-	// 定义菜单缓存
-	private static Map<String, List<MenuDO>> menuCache = new HashMap<String, List<MenuDO>>();
+	private static Map<String, List<MenuDO>> menuCache = new HashMap<>();
+	
+	private UserCache(){}
 	
 	/**
 	 * 保存菜单信息到缓存中

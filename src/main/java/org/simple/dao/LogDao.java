@@ -1,6 +1,7 @@
 package org.simple.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.simple.dto.LogOperateDTO;
 import org.simple.entity.LogOperateDO;
@@ -12,7 +13,7 @@ public interface LogDao {
 	/**
 	 * 操作日志分页列表
 	 */
-	List<LogOperateDTO> pagingLogOperates(LogOperateDTO logOperateDTO);
+	List<LogOperateDTO> pagingLogOperates(Map<String, Object> paramMap);
 	
 	/**
 	 * 保存操作日志信息

@@ -1,8 +1,8 @@
 package org.simple.controller;
 
-import org.simple.constant.MessageConsts;
 import org.simple.dto.PageDTO;
 import org.simple.dto.PostDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.ResultDTO;
 import org.simple.entity.PostDO;
 import org.simple.service.PostService;
@@ -35,8 +35,8 @@ public class PostController extends BaseController {
 	 */
 	@RequestMapping("/pagingPosts.do")
 	@ResponseBody
-	public PageDTO pagingPosts(PostDTO postDTO) {
-		return postService.pagingPosts(postDTO);
+	public PageDTO pagingPosts(PostDTO postDTO, QueryDTO queryDTO) {
+		return postService.pagingPosts(postDTO, queryDTO);
 	}
 	
 	/**
@@ -45,14 +45,7 @@ public class PostController extends BaseController {
 	@RequestMapping("/savePost.do")
 	@ResponseBody
 	public ResultDTO savePost(PostDTO postDTO) {
-		try {
-			postDTO.setIdUser("40284e815e80a91e015e80ac16840000");
-			//post.setIdUser(getCurrentUser().getIdUser());
-			return postService.savePost(postDTO);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResultDTO(false, MessageConsts.SAVE_FAILURE);
-		}
+		return postService.savePost(postDTO);
 	}
 	
 	/**
@@ -61,12 +54,7 @@ public class PostController extends BaseController {
 	@RequestMapping("/updatePost.do")
 	@ResponseBody
 	public ResultDTO updatePost(PostDO post, String idColumns) {
-		try {
-			return postService.updatePost(post, idColumns);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResultDTO(false, MessageConsts.SAVE_FAILURE);
-		}
+		return postService.updatePost(post, idColumns);
 	}
 	
 	/**
@@ -75,11 +63,6 @@ public class PostController extends BaseController {
 	@RequestMapping("/batchDeletePosts.do")
 	@ResponseBody
 	public ResultDTO batchDeletePosts(String idPosts) {
-		try {
-			return postService.batchDeletePosts(idPosts.split(","));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResultDTO(false, MessageConsts.DELETE_FAILURE);
-		}
+		return postService.batchDeletePosts(idPosts.split(","));
 	}
 }

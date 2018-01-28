@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.simple.cache.UserCache;
-import org.simple.constant.SysCodeConsts;
+import org.simple.constant.SysCodeConst;
 import org.simple.context.UserContext;
 import org.simple.entity.MenuDO;
 import org.simple.resolver.UserResolver;
@@ -35,7 +35,7 @@ public class CustomizedSessionRegistryImpl extends SessionRegistryImpl {
 		logger.debug("当前权限：" + roleNames);
 		logger.debug("开始添加菜单信息到缓存...");
 		if(roleService != null) {
-			List<MenuDO> menuList = roleService.listHasPermitedMenus(roleNames, SysCodeConsts.CURRENT_SYSTEM_CODE);
+			List<MenuDO> menuList = roleService.listHasPermitedMenus(roleNames, SysCodeConst.CURRENT_SYSTEM_CODE);
 			UserCache.storeMenusToCache(userName, menuList);
 			logger.debug("当前菜单：" + JSON.toJSONString(menuList));
 		}

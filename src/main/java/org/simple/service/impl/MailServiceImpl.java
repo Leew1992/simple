@@ -16,8 +16,8 @@ public class MailServiceImpl implements MailService {
 	private MailDao mailDao;
 	
 	@Override
-	public MailSendRecordDO getLastestMailSendRecordByFrom(String from) {
-		return mailDao.getLastestMailSendRecordByFrom(from);
+	public MailSendRecordDO getNewestMailSendRecord(String from) {
+		return mailDao.getNewestMailSendRecord(from);
 	}
 
 	@Override

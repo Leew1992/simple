@@ -1,9 +1,11 @@
 package org.simple.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.simple.dto.AttachmentDTO;
 import org.simple.dto.PageDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.ResultDTO;
 import org.simple.entity.AttachmentDO;
 
@@ -25,17 +27,17 @@ public interface AttachmentService {
 	/**
 	 * 获取附件分页列表
 	 */
-	PageDTO pagingAttachments(AttachmentDTO attachmentDTO);
+	PageDTO pagingAttachments(AttachmentDTO attachmentDTO, QueryDTO queryDTO);
 	
     /**
      * 统计图片附件数量
      */
-    Integer countAttachmentsByCreatedDateForPicture(String accessDate);
+    Integer countAttachmentsBasedFuzzy(Map<String, Object> paramMap);
     
     /**
      * 统计图片附件数量
      */
-    Integer countAttachmentsInCreatedDatesForPicture(List<String> accessDates);
+    Integer countAttachmentsBasedAccurate(Map<String, Object> paramMap);
     
     /**
      * 统计视频附件数量

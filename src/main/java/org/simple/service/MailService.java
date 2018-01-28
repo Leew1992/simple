@@ -9,7 +9,7 @@ public interface MailService {
 	/**
 	 * 获取最新的邮件发送记录
 	 */
-	MailSendRecordDO getLastestMailSendRecordByFrom(String from);
+	MailSendRecordDO getNewestMailSendRecord(String from);
 	
 	/**
 	 * 获取邮件发送列表

@@ -110,7 +110,7 @@ public class ColumnDaoTest extends BaseTest {
      */
     @Test
     public void testBatchDeleteColumns() {
-    	List<String> idColumns = new ArrayList<String>();
+    	List<String> idColumns = new ArrayList<>();
     	idColumns.add("0");
     	idColumns.add("1");
     	columnDao.batchDeleteColumns(idColumns);
@@ -157,7 +157,7 @@ public class ColumnDaoTest extends BaseTest {
      */
     @Test
     public void testBatchDeleteColumnPost() {
-    	List<String> idPosts = new ArrayList<String>();
+    	List<String> idPosts = new ArrayList<>();
     	idPosts.add("0");
     	idPosts.add("1");
     	columnDao.batchDeleteColumnPosts(idPosts);

@@ -1,8 +1,8 @@
 package org.simple.dao;
 
 import java.util.List;
+import java.util.Map;
 
-import org.simple.dto.PostDTO;
 import org.simple.entity.PostAttachmentDO;
 import org.simple.entity.PostCommentDO;
 import org.simple.entity.PostDO;
@@ -27,17 +27,17 @@ public interface PostDao {
     /**
      * 获取贴子分页信息
      */
-    List<PostDO> pagingPosts(PostDTO postDTO);
+    List<PostDO> pagingPosts(Map<String, Object> paramMap);
     
     /**
      * 统计贴子数量
      */
-    Integer countPostsByCreatedDate(String accessDate);
+    Integer countPostsBasedFuzzy(String createdDate);
     
     /**
      * 统计贴子数量
      */
-    Integer countPostsInCreatedDates(List<String> accessDates);
+    Integer countPostsBasedAccurate(List<String> createdDates);
     
     /**
      * 保存贴子信息

@@ -12,13 +12,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.util.FileUtil;
 import org.simple.annotation.MonitorAccess;
+import org.simple.constant.FileConst;
+import org.simple.constant.ResponseConst;
 import org.simple.dto.AttachmentDTO;
 import org.simple.dto.ImageDTO;
 import org.simple.dto.PageDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.ResultDTO;
 import org.simple.entity.AttachmentDO;
 import org.simple.entity.PostAttachmentDO;
 import org.simple.entity.UserDO;
+import org.simple.exception.WebException;
 import org.simple.service.AttachmentService;
 import org.simple.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/attachment")
 public class AttachmentController extends BaseController {
 	
-	private static final String JPG_SUFFIX = ".jpg";
+	private static final String CONTENT_DISPOSITION = "Content-Disposition";
 
 	@Autowired
 	private AttachmentService attachService;
@@ -57,8 +61,8 @@ public class AttachmentController extends BaseController {
 	 */
 	@RequestMapping("/pagingAttachments.do")
 	@ResponseBody
-	public PageDTO pagingAttachments(AttachmentDTO attachmentDTO) {
-		return attachService.pagingAttachments(attachmentDTO);
+	public PageDTO pagingAttachments(AttachmentDTO attachmentDTO, QueryDTO queryDTO) {
+		return attachService.pagingAttachments(attachmentDTO, queryDTO);
 	}
 	
 	/**
@@ -89,8 +93,7 @@ public class AttachmentController extends BaseController {
 			Date date = new Date();
 			String realPath = request.getSession().getServletContext().getRealPath("/").split("webapps")[0];
 			String fileDir = realPath + "assets/images/";
-			String fileName = date.getTime() + JPG_SUFFIX;
-			//String realPath = "D:/attach/";
+			String fileName = date.getTime() + FileConst.Format.POINT_JPG;
 			File dir = new File(fileDir);  
 			
 			if(!dir.exists()){  
@@ -100,7 +103,7 @@ public class AttachmentController extends BaseController {
 			try {
 				file.transferTo(new File(dir, fileName));
 			} catch (IllegalStateException | IOException e) {
-				e.printStackTrace();
+				throw new WebException(e);
 			}  
 			imageDTO.setResult(fileDir + fileName);
 			imageDTO.setMessage("success");
@@ -153,7 +156,7 @@ public class AttachmentController extends BaseController {
 			 bufferedInputStream.close();
 			 return bytes;
 		} catch (Exception e) {
-			 return e.getMessage().getBytes();
+			throw new WebException(e);
 		}
 	}
 	
@@ -166,20 +169,13 @@ public class AttachmentController extends BaseController {
 		String filePath=request.getParameter("filePath");
 		
 		String fileName = getFileName(filePath);
-		String fileType=fileName.substring(fileName.lastIndexOf(".")+1, fileName.length());
+		String fileType=fileName.substring(fileName.lastIndexOf('.')+1, fileName.length());
 		
-		if (("doc".equals(fileType) || "docx".equals(fileType))) {
-			// word
-			response.setContentType("application/vnd.ms-word;charset=UTF-8");
-			//文件名中已包含后缀
-			response.setHeader("Content-Disposition", "attachment;filename="+new String(fileName.getBytes("GBK"),"iso-8859-1"));
-		} else if(("xls".equals(fileType) || "xlsx".equals(fileType))) {
-			// excel
-			response.setContentType("application/vnd.ms-excel;charset=UTF-8");
-			//文件名中已包含后缀
-			response.setHeader("Content-Disposition", "attachment;filename="+ new String(fileName.getBytes("GBK"),"iso-8859-1"));
-		}else{
-			response.setHeader("Content-Disposition", "attachment;filename="+ new String(fileName.getBytes("GBK"),"iso-8859-1"));
+		response.setHeader(CONTENT_DISPOSITION, "attachment;filename="+ new String(fileName.getBytes(FileConst.Encoding.GBK),FileConst.Encoding.ISO88591));
+		if (FileConst.Format.DOC.equals(fileType) || FileConst.Format.DOCX.equals(fileType)) {
+			response.setContentType(ResponseConst.ContentType.WORD);
+		} else if(FileConst.Format.XLS.equals(fileType) || FileConst.Format.XLSX.equals(fileType)) {
+			response.setContentType(ResponseConst.ContentType.EXCEL);
 		}
 		
 		File file = new File(filePath);
@@ -194,8 +190,7 @@ public class AttachmentController extends BaseController {
 	 * 获取文件名
 	 */
 	private String getFileName(String filePath) {
-		String[] filePathArr = filePath.split("/");
-		String fileName = filePathArr[filePathArr.length-1];
-		return fileName;
+		String[] filePathArr = filePath.split(File.separator);
+		return filePathArr[filePathArr.length-1];
 	}
 }

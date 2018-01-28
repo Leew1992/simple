@@ -3,6 +3,7 @@ package org.simple.service;
 import java.util.List;
 
 import org.simple.dto.PageDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.ResultDTO;
 import org.simple.dto.RoleDTO;
 import org.simple.dto.TreeNode;
@@ -28,7 +29,7 @@ public interface RoleService {
 	/**
 	 * 获取角色列表
 	 */
-	PageDTO pagingRoles(RoleDTO roleDTO);
+	PageDTO pagingRoles(RoleDTO roleDTO, QueryDTO queryDTO);
 	
 	/**
      * 获取角色树

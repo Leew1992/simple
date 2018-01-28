@@ -24,11 +24,11 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
 	private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap;
 
 	public MyFilterInvocationSecurityMetadataSource() {
-		requestMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
+		requestMap = new LinkedHashMap<>();
 		
 		AntPathRequestMatcher loginMatcher = new AntPathRequestMatcher("/login*");
 		AntPathRequestMatcher registerMatcher = new AntPathRequestMatcher("/user/register*");
-		Collection<ConfigAttribute> anonyCas = new ArrayList<ConfigAttribute>();
+		Collection<ConfigAttribute> anonyCas = new ArrayList<>();
 		ConfigAttribute anonyCa = new SecurityConfig("ROLE_ANONYMOUS");
 		anonyCas.add(anonyCa);
 		requestMap.put(loginMatcher, anonyCas);
@@ -44,7 +44,7 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
 		AntPathRequestMatcher postMatcher = new AntPathRequestMatcher("/post/*");
 		AntPathRequestMatcher categoryMatcher = new AntPathRequestMatcher("/category/*");
 		AntPathRequestMatcher commentMatcher = new AntPathRequestMatcher("/comment/*");
-		Collection<ConfigAttribute> userCas = new ArrayList<ConfigAttribute>();
+		Collection<ConfigAttribute> userCas = new ArrayList<>();
 		ConfigAttribute userCa = new SecurityConfig("ROLE_USER");
 		userCas.add(userCa);
 		requestMap.put(indexMatcher, userCas);
@@ -59,7 +59,7 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
 		requestMap.put(commentMatcher, userCas);
 		
 		AntPathRequestMatcher adminMatcher = new AntPathRequestMatcher("/config/*");
-		Collection<ConfigAttribute> adminCas = new ArrayList<ConfigAttribute>();
+		Collection<ConfigAttribute> adminCas = new ArrayList<>();
 		ConfigAttribute adminCa = new SecurityConfig("ROLE_ADMIN");
 		adminCas.add(adminCa);
 		requestMap.put(adminMatcher, adminCas);
@@ -84,7 +84,7 @@ public class MyFilterInvocationSecurityMetadataSource implements FilterInvocatio
 				return (Collection) entry.getValue();
 			}
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override

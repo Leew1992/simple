@@ -1,8 +1,5 @@
 package org.simple.security;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,7 +18,7 @@ public class RequestHeaderProcessingFilter extends AbstractAuthenticationProcess
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-			throws AuthenticationException, IOException, ServletException {
+			throws AuthenticationException {
 		String username = request.getHeader(usernameHeader);
 		String password = request.getHeader(passwordHeader);
 		String signature = request.getHeader(signatureHeader);

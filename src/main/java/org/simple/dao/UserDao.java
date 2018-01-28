@@ -1,8 +1,8 @@
 package org.simple.dao;
 
 import java.util.List;
+import java.util.Map;
 
-import org.simple.dto.UserDTO;
 import org.simple.entity.UserDO;
 import org.simple.entity.UserRoleDO;
 import org.springframework.stereotype.Repository;
@@ -23,12 +23,17 @@ public interface UserDao {
 	/**
 	 * 获取用户分页信息
 	 */
-	List<UserDO> pagingUsers(UserDTO userDTO);
+	List<UserDO> pagingUsers(Map<String, Object> paramMap);
 	
 	/**
 	 * 统计用户数量
 	 */
-	Integer countUsers(List<String> accessDates);
+	Integer countUsersBasedFuzzy(String createdDate);
+	
+	/**
+	 * 统计用户数量
+	 */
+	Integer countUsersBasedAccurate(List<String> createdDates);
 	
 	/**
 	 * 保存用户信息

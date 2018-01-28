@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.simple.constant.MessageConsts;
+import org.simple.constant.MessageConst;
 import org.simple.context.UserContext;
 import org.simple.dao.MenuDao;
 import org.simple.dao.RoleDao;
@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MenuServiceImpl implements MenuService {
+	
+	private static final String ID_SYSTEM = "idSystem";
 	
 	@Resource
 	private MenuDao menuDao;
@@ -63,12 +65,12 @@ public class MenuServiceImpl implements MenuService {
 	@Override
 	public Map<String, List<TreeNode>> getHasCheckedMenuTreeByIdRole(String idRole) {
 		List<RoleSystemDO> roleSystemList = roleDao.listRoleSystemsByIdRole(idRole);
-		Map<String, List<TreeNode>> resultMap = new HashMap<String, List<TreeNode>>();
+		Map<String, List<TreeNode>> resultMap = new HashMap<>();
 		for(RoleSystemDO roleSystemDO : roleSystemList) {
-			Map<String, Object> paramMap = new HashMap<String, Object>();
+			Map<String, Object> paramMap = new HashMap<>();
 			String idSystem = roleSystemDO.getIdSystem();
 			paramMap.put("idRole", idRole);
-			paramMap.put("idSystem", idSystem);
+			paramMap.put(ID_SYSTEM, idSystem);
 			List<TreeNode> treeList = menuDao.getHasCheckedMenuTreeByIdRoleAndIdSystem(paramMap);
 			resultMap.put(idSystem, treeList);
 		}
@@ -77,17 +79,17 @@ public class MenuServiceImpl implements MenuService {
 	
 	@Override
 	public List<TreeNode> getHasCheckedMenuTreeByIdSystemAndIdMenu(String idSystem, String idMenu) {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("idSystem", idSystem);
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put(ID_SYSTEM, idSystem);
 		paramMap.put("idMenu", idMenu);
 		return menuDao.getHasCheckedMenuTreeByIdSystemAndIdMenu(paramMap);
 	}
 	
 	@Override
 	public List<TreeNode> getHasCheckedMenuTreeByIdRoleAndIdSystem(String idRole, String idSystem) {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("idRole", idRole);
-		paramMap.put("idSystem", idSystem);
+		paramMap.put(ID_SYSTEM, idSystem);
 		return menuDao.getHasCheckedMenuTreeByIdRoleAndIdSystem(paramMap);
 	}
 	
@@ -105,7 +107,7 @@ public class MenuServiceImpl implements MenuService {
 		systemMenuDO.setUpdatedBy(UserContext.getCurrentUserName());
 		systemDao.saveSystemMenu(systemMenuDO);
 		
-		return new ResultDTO(true,MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true,MessageConst.SAVE_SUCCESS);
 	}
 	
 	@Override
@@ -123,32 +125,32 @@ public class MenuServiceImpl implements MenuService {
 		newSystemMenu.setUpdatedBy(UserContext.getCurrentUserName());
 		systemDao.saveSystemMenu(newSystemMenu);
 		
-		return new ResultDTO(true,MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true,MessageConst.SAVE_SUCCESS);
 	}
 	
 	@Override
 	public ResultDTO updateMenu(MenuDO menuDO) {
 		menuDO.setUpdatedBy(UserContext.getCurrentUserName());
 		menuDao.updateMenu(menuDO);
-		return new ResultDTO(true,MessageConsts.UPDATE_SUCCESS);
+		return new ResultDTO(true,MessageConst.UPDATE_SUCCESS);
 	}
 	
 	@Override
 	public ResultDTO batchEnableMenus(String idMenus) {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("enabled", "1");
 		paramMap.put("idMenus", Arrays.asList(idMenus));
 		menuDao.batchUpdateMenuEnableds(paramMap);
-		return new ResultDTO(true,MessageConsts.ENABLE_SUCCESS);
+		return new ResultDTO(true,MessageConst.ENABLE_SUCCESS);
 	}
 	
 	@Override
 	public ResultDTO batchDisableMenus(String idMenus) {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("enabled", false);
 		paramMap.put("idMenus", Arrays.asList(idMenus));
 		menuDao.batchUpdateMenuEnableds(paramMap);
-		return new ResultDTO(true,MessageConsts.DISABLE_SUCCESS);
+		return new ResultDTO(true,MessageConst.DISABLE_SUCCESS);
 	}
 	
 	@Override
@@ -156,7 +158,7 @@ public class MenuServiceImpl implements MenuService {
 		systemDao.deleteSystemMenuByIdMenu(idMenu);
 		roleDao.deleteRoleMenusByIdMenu(idMenu);
 		menuDao.deleteMenu(idMenu);
-		return new ResultDTO(true,MessageConsts.DELETE_SUCCESS);
+		return new ResultDTO(true,MessageConst.DELETE_SUCCESS);
 	}
 	
 	@Override
@@ -167,7 +169,7 @@ public class MenuServiceImpl implements MenuService {
 			roleDao.deleteRoleMenusByIdMenu(idMenu);
 			menuDao.deleteMenu(idMenu);
 		}
-		return new ResultDTO(true,MessageConsts.DELETE_SUCCESS);
+		return new ResultDTO(true,MessageConst.DELETE_SUCCESS);
 	}
 
 }

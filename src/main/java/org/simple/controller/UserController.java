@@ -1,8 +1,8 @@
 package org.simple.controller;
 
 import org.simple.annotation.MonitorAccess;
-import org.simple.constant.MessageConsts;
 import org.simple.dto.PageDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.ResultDTO;
 import org.simple.dto.UserDTO;
 import org.simple.entity.UserDO;
@@ -43,8 +43,8 @@ public class UserController extends BaseController {
 	@MonitorAccess
 	@RequestMapping("/pagingUsers.do")
 	@ResponseBody
-	public PageDTO pagingUsers(UserDTO userDTO) {
-		return userService.pagingUsers(userDTO);
+	public PageDTO pagingUsers(UserDTO userDTO, QueryDTO queryDTO) {
+		return userService.pagingUsers(userDTO, queryDTO);
 	}
 	
 	/**
@@ -54,11 +54,7 @@ public class UserController extends BaseController {
 	@RequestMapping("/saveUser.do")
 	@ResponseBody
 	public ResultDTO saveUser(UserDTO userDTO) {
-		try {
-			return userService.saveUser(userDTO);
-		} catch (Exception e) {
-			return new ResultDTO(false, MessageConsts.SAVE_FAILURE);
-		}
+		return userService.saveUser(userDTO);
 	}
 	
 	/**
@@ -68,11 +64,7 @@ public class UserController extends BaseController {
 	@RequestMapping("/updateUser.do")
 	@ResponseBody
 	public ResultDTO updateUser(UserDTO userDTO) {
-		try {
-			return userService.updateUser(userDTO);
-		} catch (Exception e) {
-			return new ResultDTO(false, MessageConsts.UPDATE_FAILURE);
-		}
+		return userService.updateUser(userDTO);
 	}
 	
 	/**
@@ -82,11 +74,7 @@ public class UserController extends BaseController {
 	@RequestMapping("/assignRolesForUserList.do")
 	@ResponseBody
 	public ResultDTO assignRolesForUserList(String idUser, String idRoles) {
-		try {
-			return userService.assignRolesForUserList(idUser, idRoles);
-		} catch (Exception e) {
-			return new ResultDTO(false, MessageConsts.ASSIGN_FAILURE);
-		}
+		return userService.assignRolesForUserList(idUser, idRoles);
 	}
 	
 	/**
@@ -96,11 +84,6 @@ public class UserController extends BaseController {
 	@RequestMapping("/batchDeleteUsers.do")
 	@ResponseBody
 	public ResultDTO batchDeleteUsers(String idUsers) {
-		try {
-			return userService.batchDeleteUsers(idUsers);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResultDTO(false, MessageConsts.DELETE_FAILURE);
-		}
+		return userService.batchDeleteUsers(idUsers);
 	}
 }

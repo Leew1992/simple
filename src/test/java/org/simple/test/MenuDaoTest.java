@@ -79,7 +79,7 @@ public class MenuDaoTest extends BaseTest {
 	 */
 	@Test
 	public void testGetMenuTreeForMenuAssign() {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("idRole", "0");
 		paramMap.put("idSystem", "0");
 		List<TreeNode>  treeNodeList = menuDao.getMenuTreeForMenuAssign(paramMap);
@@ -91,7 +91,7 @@ public class MenuDaoTest extends BaseTest {
 	 */
 	@Test
 	public void testGetMenuTreeForMenuForm() {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("idSystem", "0");
 		paramMap.put("idMenu", "0");
 		List<TreeNode>  treeNodeList = menuDao.getHasCheckedMenuTreeByIdSystemAndIdMenu(paramMap);
@@ -103,7 +103,7 @@ public class MenuDaoTest extends BaseTest {
 		List<MenuDO> allMenus =  menuDao.listAllMenus();
 		List<MenuDO> orderedMenus = MenuHandler.orderMenus("0", allMenus);
 		Map<String, List<MenuItem>> moduleMap = MenuHandler.formatOrderedMenus(orderedMenus);
-		System.out.println(JSON.toJSONString(moduleMap));
+		logger.debug(JSON.toJSONString(moduleMap));
 	}
 	
 	/**
@@ -150,7 +150,7 @@ public class MenuDaoTest extends BaseTest {
 	 */
 	@Test
 	public void testUpdateMenuStatus() {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("idMenu", "0");
 		paramMap.put("enabled", "0");
 		menuDao.updateMenuEnabled(paramMap);
@@ -172,7 +172,7 @@ public class MenuDaoTest extends BaseTest {
 	 */
 	@Test
 	public void testBatchDeleteMenus() {
-		List<String> idMenus = new ArrayList<String>();	
+		List<String> idMenus = new ArrayList<>();	
 		idMenus.add("0");
 		idMenus.add("1");
 		menuDao.batchDeleteMenus(idMenus);

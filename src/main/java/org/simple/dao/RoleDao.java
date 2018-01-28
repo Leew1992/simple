@@ -42,7 +42,7 @@ public interface RoleDao {
     /**
      * 获取角色列表
      */
-    List<RoleDO> pagingRoles(RoleDTO roleDTO);
+    List<RoleDO> pagingRoles(Map<String, Object> paramMap);
     
     /**
      * 获取角色树

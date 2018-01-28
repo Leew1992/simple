@@ -5,7 +5,7 @@
 <mapper namespace="org.simple.dao.MailDao">
 
     <!-- 获取邮件发送记录 -->
-    <select id="getLastestMailSendRecordByFrom" parameterType="string" resultType="MailSendRecordDO">
+    <select id="getNewestMailSendRecord" parameterType="string" resultType="MailSendRecordDO">
         select * from sim_mail_send_record
 		 where from = #{from}
 		 order by created_date desc

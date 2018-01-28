@@ -45,21 +45,21 @@
 					<td>
 						<i class="glyphicon glyphicon-eye-open"></i>
 						<div>
-							<span>{{statData.accessTotal}}</span>
+							<span>{{statData.accessTotal == null ? 0 : statData.accessTotal}}</span>
 							<p>访问量</p>
 						</div>
 					</td>
 					<td>
 						<i class="glyphicon glyphicon-user"></i>
 						<div>
-							<span>{{statData.userTotal}}</span>
+							<span>{{statData.userTotal == null ? 0 : statData.userTotal}}</span>
 							<p>用户数</p>
 						</div>
 					</td>
 					<td>
 						<i class="glyphicon glyphicon-book"></i>
 						<div>
-							<span>{{statData.postTotal}}</span>
+							<span>{{statData.postTotal == null ? 0 : statData.postTotal}}</span>
 							<p>贴子数</p>
 						</div>
 					</td>
@@ -68,21 +68,21 @@
 					<td>
 						<i class="glyphicon glyphicon-comment"></i>
 						<div>
-							<span>{{statData.commentTotal}}</span>
+							<span>{{statData.commentTotal == null ? 0 : statData.commentTotal}}</span>
 							<p>评论数</p>
 						</div>
 					</td>
 					<td>
 						<i class="glyphicon glyphicon-picture"></i>
 						<div>
-							<span>{{statData.pictureTotal}}</span>
+							<span>{{statData.pictureTotal ? 0 : statData.pictureTotal}}</span>
 							<p>图片数</p>
 						</div>
 					</td>
 					<td>
 						<i class="glyphicon glyphicon-facetime-video"></i>
 						<div>
-							<span>{{statData.videoTotal}}</span>
+							<span>{{statData.videoTotal ? 0 : statData.videoTotal}}</span>
 							<p>视频数</p>
 						</div>
 					</td>
@@ -118,12 +118,12 @@
 		    </label>
 		</div>
 		<table class="table table-bordered">
-			<tr><td style="border-right:none;">用户访问量</td><td style="border-left:none;">{{statAccess.userTotal}}</td></tr>
-			<tr><td style="border-right:none;">角色访问量</td><td style="border-left:none;">{{statAccess.roleTotal}}</td></tr>
-			<tr><td style="border-right:none;">菜单访问量</td><td style="border-left:none;">{{statAccess.menuTotal}}</td></tr>
-			<tr><td style="border-right:none;">贴子访问量</td><td style="border-left:none;">{{statAccess.postTotal}}</td></tr>
-			<tr><td style="border-right:none;">评论访问量</td><td style="border-left:none;">{{statAccess.commentTotal}}</td></tr>
-			<tr><td style="border-right:none;">配置访问量</td><td style="border-left:none;">{{statAccess.configTotal}}</td></tr>
+			<tr><td style="border-right:none;">用户访问量</td><td style="border-left:none;">{{statAccess.userTotal == null ? 0 : statAccess.userTotal}}</td></tr>
+			<tr><td style="border-right:none;">角色访问量</td><td style="border-left:none;">{{statAccess.roleTotal == null ? 0 : statAccess.roleTotal}}</td></tr>
+			<tr><td style="border-right:none;">菜单访问量</td><td style="border-left:none;">{{statAccess.menuTotal == null ? 0 : statAccess.menuTotal}}</td></tr>
+			<tr><td style="border-right:none;">贴子访问量</td><td style="border-left:none;">{{statAccess.postTotal == null ? 0 : statAccess.postTotal}}</td></tr>
+			<tr><td style="border-right:none;">评论访问量</td><td style="border-left:none;">{{statAccess.commentTotal == null ? 0 : statAccess.commentTotal}}</td></tr>
+			<tr><td style="border-right:none;">配置访问量</td><td style="border-left:none;">{{statAccess.configTotal == null ? 0 : statAccess.configTotal}}</td></tr>
 		</table>
 	</div>
 </div>

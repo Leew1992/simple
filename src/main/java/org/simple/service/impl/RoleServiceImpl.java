@@ -8,12 +8,13 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.simple.constant.MessageConsts;
-import org.simple.constant.SysCodeConsts;
+import org.simple.constant.MessageConst;
+import org.simple.constant.SysCodeConst;
 import org.simple.context.UserContext;
 import org.simple.dao.GroupDao;
 import org.simple.dao.RoleDao;
 import org.simple.dto.PageDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.ResultDTO;
 import org.simple.dto.RoleDTO;
 import org.simple.dto.TreeNode;
@@ -23,6 +24,7 @@ import org.simple.entity.RoleDO;
 import org.simple.entity.RoleMenuDO;
 import org.simple.entity.RoleSystemDO;
 import org.simple.service.RoleService;
+import org.simple.util.BeanUtil;
 import org.springframework.stereotype.Service;
 
 /**
@@ -50,7 +52,7 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public List<TreeNode> listRolesByIdUser(String idUser) {
 		List<RoleDTO> roleList = roleDao.listRolesByIdUser(idUser);
-		List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
+		List<TreeNode> treeNodeList = new ArrayList<>();
 		for(RoleDTO roleDTO : roleList) {
 			TreeNode treeNode = new TreeNode();
 			treeNode.setId(roleDTO.getIdRole());
@@ -65,8 +67,9 @@ public class RoleServiceImpl implements RoleService {
 	}
 	
 	@Override
-	public PageDTO pagingRoles(RoleDTO roleDTO) {
-		List<RoleDO> roleList = roleDao.pagingRoles(roleDTO);
+	public PageDTO pagingRoles(RoleDTO roleDTO, QueryDTO queryDTO) {
+		Map<String, Object> paramMap = BeanUtil.convertBeansToMap(roleDTO, queryDTO);
+		List<RoleDO> roleList = roleDao.pagingRoles(paramMap);
 		PageDTO page = new PageDTO();
 		page.setRows(roleList);
 		page.setTotal(roleList.size());
@@ -86,14 +89,14 @@ public class RoleServiceImpl implements RoleService {
 	 */
 	@Override
 	public List<MenuDO> listHasPermitedMenus(List<String> roleNames, String systemCode) {
-		List<MenuDO> menuList = new ArrayList<MenuDO>();
-		if(roleNames != null && roleNames.size() != 0) {
-			Map<String, Object> paramMap = new HashMap<String, Object>();
+		List<MenuDO> menuList = new ArrayList<>();
+		if(roleNames != null && !roleNames.isEmpty()) {
+			Map<String, Object> paramMap = new HashMap<>();
 			paramMap.put("roleNames", roleNames);
-			paramMap.put("systemCode", SysCodeConsts.CURRENT_SYSTEM_CODE);
+			paramMap.put("systemCode", SysCodeConst.CURRENT_SYSTEM_CODE);
 			RoleSystemDO roleSystem = roleDao.getHasPermitedRoleSystem(paramMap);
 		
-			Map<String, Object> menuMap = new HashMap<String, Object>();
+			Map<String, Object> menuMap = new HashMap<>();
 			menuMap.put("idRole", roleSystem.getIdRole());
 			menuMap.put("idSystem", roleSystem.getIdSystem());
 			menuList = roleDao.listHasPermitedMenus(menuMap);			
@@ -115,7 +118,7 @@ public class RoleServiceImpl implements RoleService {
 			roleMenuDO.setUpdatedBy(UserContext.getCurrentUserName());
 			roleDao.saveRoleMenu(roleMenuDO);
 		}
-		return new ResultDTO(true, MessageConsts.ASSIGN_SUCCESS);
+		return new ResultDTO(true, MessageConst.ASSIGN_SUCCESS);
 	}
 	
 	@Override
@@ -123,7 +126,7 @@ public class RoleServiceImpl implements RoleService {
 		// 删除用户角色信息
 		roleDao.deleteRoleSystemsByIdRole(idRole);
 		// 删除被取消的角色菜单
-		Map<String, Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("idRole", idRole);
 		paramMap.put("idSystems", Arrays.asList(idSystems.split(",")));
 		roleDao.deleteCanceledRoleMenu(paramMap);
@@ -137,7 +140,7 @@ public class RoleServiceImpl implements RoleService {
 			roleSystemDO.setUpdatedBy(UserContext.getCurrentUserName());
 			roleDao.saveRoleSystem(roleSystemDO);
 		}
-		return new ResultDTO(true, MessageConsts.ASSIGN_SUCCESS);
+		return new ResultDTO(true, MessageConst.ASSIGN_SUCCESS);
 	}
 	
 	@Override
@@ -154,7 +157,7 @@ public class RoleServiceImpl implements RoleService {
 		groupRoleDO.setCreatedBy(UserContext.getCurrentUserName());
 		groupRoleDO.setUpdatedBy(UserContext.getCurrentUserName());
 		groupDao.saveGroupRole(groupRoleDO);
-		return new ResultDTO(true, MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true, MessageConst.SAVE_SUCCESS);
 	}
 	
 	@Override
@@ -172,7 +175,7 @@ public class RoleServiceImpl implements RoleService {
 		groupRoleDO.setCreatedBy(UserContext.getCurrentUserName());
 		groupRoleDO.setUpdatedBy(UserContext.getCurrentUserName());
 		groupDao.saveGroupRole(groupRoleDO);
-		return new ResultDTO(true, MessageConsts.UPDATE_SUCCESS);
+		return new ResultDTO(true, MessageConst.UPDATE_SUCCESS);
 	}
 
 	@Override
@@ -181,7 +184,7 @@ public class RoleServiceImpl implements RoleService {
 		roleDao.batchDeleteRoles(Arrays.asList(idRoleArr));
 		roleDao.batchDeleteRoleMenus(Arrays.asList(idRoleArr));
 		groupDao.batchDeleteGroups(Arrays.asList(idRoleArr));
-		return new ResultDTO(true, MessageConsts.DELETE_SUCCESS);
+		return new ResultDTO(true, MessageConst.DELETE_SUCCESS);
 	}
 
 }

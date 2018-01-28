@@ -119,7 +119,7 @@ public class GroupDaoTest extends BaseTest {
 	 */
 	@Test
 	public void testBatchDeleteGroups() {
-		List<String> idGroups = new ArrayList<String>();
+		List<String> idGroups = new ArrayList<>();
 		idGroups.add("0");
 		idGroups.add("1");
 		groupDao.batchDeleteGroups(idGroups);
@@ -167,7 +167,7 @@ public class GroupDaoTest extends BaseTest {
 	 */
 	@Test
 	public void testBatchDeleteGroupsUserByIdUser() {
-		List<String> idUsers = new ArrayList<String>();
+		List<String> idUsers = new ArrayList<>();
 		idUsers.add("0");
 		idUsers.add("1");
 		groupDao.batchDeleteGroupsUserByIdUser(idUsers);
@@ -215,7 +215,7 @@ public class GroupDaoTest extends BaseTest {
 	 */
 	@Test
 	public void testBatchDeleteGroupRolesByIdRole() {
-		List<String> idRoles = new ArrayList<String>();
+		List<String> idRoles = new ArrayList<>();
 		idRoles.add("0");
 		idRoles.add("1");
 		groupDao.batchDeleteGroupRolesByIdRole(idRoles);

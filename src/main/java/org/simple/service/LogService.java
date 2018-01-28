@@ -3,6 +3,7 @@ package org.simple.service;
 import java.util.List;
 
 import org.simple.dto.LogOperateDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.entity.LogOperateDO;
 
 public interface LogService {
@@ -10,7 +11,7 @@ public interface LogService {
 	/**
 	 * 操作日志分页列表
 	 */
-	List<LogOperateDTO> pagingLogOperates(LogOperateDTO logOperateDTO);
+	List<LogOperateDTO> pagingLogOperates(LogOperateDTO logOperateDTO, QueryDTO queryDTO);
 	
 	/**
 	 * 保存操作日志信息

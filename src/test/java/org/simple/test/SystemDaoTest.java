@@ -107,7 +107,7 @@ public class SystemDaoTest extends BaseTest {
      */
     @Test
     public void testbatchDeleteSystems() {
-    	List<String> idSystems = new ArrayList<String>();
+    	List<String> idSystems = new ArrayList<>();
     	idSystems.add("0");
     	idSystems.add("1");
     	systemDao.batchDeleteSystems(idSystems);
@@ -155,7 +155,7 @@ public class SystemDaoTest extends BaseTest {
      */
     @Test
     public void testBatchDeleteSystemMenus() {
-    	List<String> idMenus = new ArrayList<String>();
+    	List<String> idMenus = new ArrayList<>();
     	idMenus.add("0");
     	idMenus.add("1");
     	systemDao.batchDeleteSystemMenus(idMenus);

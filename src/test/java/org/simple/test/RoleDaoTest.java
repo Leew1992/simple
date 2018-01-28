@@ -10,12 +10,14 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.simple.dao.RoleDao;
 import org.simple.dto.MenuItem;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.RoleDTO;
 import org.simple.entity.MenuDO;
 import org.simple.entity.RoleDO;
 import org.simple.entity.RoleMenuDO;
 import org.simple.handler.MenuHandler;
 import org.simple.service.RoleService;
+import org.simple.util.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
@@ -55,7 +57,7 @@ public class RoleDaoTest extends BaseTest {
      */
 	@Test
     public void testListRolesByIdGroup() { 
-		Map<String, Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("idGroup", "0");
     	List<RoleDO> roleList = roleDao.listRolesByIdGroup(paramMap);
     	logger.debug(JSON.toJSON(roleList));
@@ -78,7 +80,9 @@ public class RoleDaoTest extends BaseTest {
     public void testPagingRoles() {
     	RoleDTO roleDTO = new RoleDTO();
     	roleDTO.setIdGroup("0");
-    	List<RoleDO> roleList = roleDao.pagingRoles(roleDTO);
+    	QueryDTO queryDTO = new QueryDTO();
+    	Map<String, Object> paramMap = BeanUtil.convertBeansToMap(roleDTO, queryDTO);
+    	List<RoleDO> roleList = roleDao.pagingRoles(paramMap);
     	logger.debug(JSON.toJSONString(roleList));
     }
     
@@ -132,7 +136,7 @@ public class RoleDaoTest extends BaseTest {
      */
 	@Test
     public void testBatchDeleteRole() {
-    	List<String> idRoles = new ArrayList<String>();
+    	List<String> idRoles = new ArrayList<>();
     	idRoles.add("0");
     	idRoles.add("1");
     	roleDao.batchDeleteRoles(idRoles);
@@ -170,9 +174,9 @@ public class RoleDaoTest extends BaseTest {
 	 */
 	@Test
 	public void deleteCanceledRoleMenu() {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("idRole", "284661a1efd211e78716047d7b0f457f");
-		List<String> idSystemList = new ArrayList<String>();
+		List<String> idSystemList = new ArrayList<>();
 		idSystemList.add("538cc0bfa2c011e780ce047d7b0f457f");
 		paramMap.put("idSystems", idSystemList);
 		roleDao.deleteCanceledRoleMenu(paramMap);
@@ -183,7 +187,7 @@ public class RoleDaoTest extends BaseTest {
      */
 	@Test
     public void testBatchDeleteRoleMenus() {
-    	List<String> idRoles = new ArrayList<String>();
+    	List<String> idRoles = new ArrayList<>();
     	idRoles.add("0");
     	idRoles.add("1");
     	roleDao.batchDeleteRoleMenus(idRoles);
@@ -192,7 +196,7 @@ public class RoleDaoTest extends BaseTest {
 	
 	@Test
 	public void testListHasPermitedMenus() {
-		List<String> roleNames = new ArrayList<String>();
+		List<String> roleNames = new ArrayList<>();
 		roleNames.add("ADMIN");
 		List<MenuDO> menuList = roleService.listHasPermitedMenus(roleNames, "simple");
 		List<MenuDO> orderedMenuList = MenuHandler.orderMenus("0", menuList);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.simple.dto.CommentDTO;
 import org.simple.dto.PageDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.ResultDTO;
 import org.simple.entity.CommentDO;
 
@@ -30,17 +31,17 @@ public interface CommentService {
 	/**
 	 * 获取评论分页
 	 */
-	PageDTO pagingComments(CommentDTO commentDTO);
+	PageDTO pagingComments(CommentDTO commentDTO, QueryDTO queryDTO);
 	
     /**
      * 统计评论数量
      */
-    Integer countCommentsByCreatedDate(String accessDate);
+    Integer countCommentsBasedFuzzy(String createdDate);
     
     /**
      * 统计评论数量
      */
-    Integer countCommentsInCreatedDates(List<String> accessDates);
+    Integer countCommentsBasedAccurate(List<String> createdDates);
 	
 	/**
 	 * 保存评论信息

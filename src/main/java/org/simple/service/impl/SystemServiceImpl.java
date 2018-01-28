@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.simple.constant.MessageConsts;
+import org.simple.constant.MessageConst;
 import org.simple.context.UserContext;
 import org.simple.dao.RoleDao;
 import org.simple.dao.SystemDao;
@@ -65,25 +65,25 @@ public class SystemServiceImpl implements SystemService {
 		systemDO.setCreatedBy(UserContext.getCurrentUserName());
 		systemDO.setUpdatedBy(UserContext.getCurrentUserName());
 		systemDao.saveSystem(systemDO);
-		return new ResultDTO(true, systemDO.getIdSystem(), MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true, systemDO.getIdSystem(), MessageConst.SAVE_SUCCESS);
 	}
 	
 	@Override
 	public ResultDTO updateSystem(SystemDO systemDO){
 		systemDO.setUpdatedBy(UserContext.getCurrentUserName());
 		systemDao.updateSystem(systemDO);
-		return new ResultDTO(true, MessageConsts.UPDATE_SUCCESS);
+		return new ResultDTO(true, MessageConst.UPDATE_SUCCESS);
 	}
 	
 	@Override
 	public ResultDTO deleteSystem(String idSystem) {
 		List<SystemDO> systemList = systemDao.getSystemByIdParent(idSystem);
-		if(systemList != null && systemList.size() == 0) {
+		if(systemList != null && !systemList.isEmpty()) {
 			systemDao.deleteSystem(idSystem);				
 		} else {
-			return new ResultDTO(false, MessageConsts.HAS_SUB_GROUP_IN_GROUP);
+			return new ResultDTO(false, MessageConst.HAS_SUB_GROUP_IN_GROUP);
 		}
-		return new ResultDTO(true, MessageConsts.DELETE_SUCCESS);
+		return new ResultDTO(true, MessageConst.DELETE_SUCCESS);
 	}
 
 }

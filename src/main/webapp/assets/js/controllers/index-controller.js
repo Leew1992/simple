@@ -9,7 +9,7 @@ define([
 		var generateMenus = function() {
 			var promise = $http({
     			method: 'GET',
-    			url: 'portal/generateMenus.do',
+    			url: 'portle/generateMenus.do',
     			headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
     		}).then(function successCallback(response) {
     			// 初始化菜单赋权

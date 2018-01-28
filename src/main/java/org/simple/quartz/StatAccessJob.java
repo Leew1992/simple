@@ -2,6 +2,7 @@ package org.simple.quartz;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,6 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public class StatAccessJob extends QuartzJobBean {
 	
+	private static final String ID_USER = "idUser";
+	private static final String ACCESS_MODULE = "accessModule";
+	private static final String ACCESS_DATE = "accessDate";	
 	private final Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
@@ -77,18 +81,18 @@ public class StatAccessJob extends QuartzJobBean {
 		// 将按日统计统计信息合并
 		List<StatDayAccessDTO> handledStatDayAccessList = StatHandler.mergeStatDayAccess(statDayAccessList);
 		// 如果查询监控访问列表为空，则返回
-		if(handledStatDayAccessList == null || handledStatDayAccessList.size() == 0) {
-			return null;
+		if(handledStatDayAccessList == null || handledStatDayAccessList.isEmpty()) {
+			return new ArrayList<>();
 		}
 		// 更新按日访问统计
 		for(StatDayAccessDO statDayAccess : handledStatDayAccessList) {
-			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("idUser", statDayAccess.getIdUser());
-			paramMap.put("accessModule", statDayAccess.getAccessModule());
-			paramMap.put("accessDate", DateUtils.formatDate(new Date(), "yyyyMMdd"));
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put(ID_USER, statDayAccess.getIdUser());
+			paramMap.put(ACCESS_MODULE, statDayAccess.getAccessModule());
+			paramMap.put(ACCESS_DATE, DateUtils.formatDate(new Date(), "yyyyMMdd"));
 			// 查询当天的访问统计
 			List<StatDayAccessDO> statDayAccessDOs = statAccessService.listStatDayAccesses(paramMap);
-			if (statDayAccessDOs != null && statDayAccessDOs.size() != 0) {
+			if (statDayAccessDOs != null && !statDayAccessDOs.isEmpty()) {
 				// 增加按日访问统计数据
 				statAccessService.increaseStatDayAccess(statDayAccess);
 			} else {
@@ -111,24 +115,24 @@ public class StatAccessJob extends QuartzJobBean {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat daySdf = new SimpleDateFormat("yyyyMMdd");
 		// 如果无新增访问数据，则返回
-		if(handledStatDayAccessList == null || handledStatDayAccessList.size() == 0) {
+		if(handledStatDayAccessList == null || handledStatDayAccessList.isEmpty()) {
 			return;
 		}
 		for(StatDayAccessDO statDayAccess : handledStatDayAccessList) {
 			try {
 				cal.setTime(daySdf.parse(statDayAccess.getAccessDate()));
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 			String accessDate = statDayAccess.getAccessDate();
 			String currentWeek = accessDate.substring(0, accessDate.length()-4) + "." + cal.get(Calendar.WEEK_OF_YEAR);
-			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("idUser", statDayAccess.getIdUser());
-			paramMap.put("accessModule", statDayAccess.getAccessModule());
-			paramMap.put("accessDate", currentWeek);
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put(ID_USER, statDayAccess.getIdUser());
+			paramMap.put(ACCESS_MODULE, statDayAccess.getAccessModule());
+			paramMap.put(ACCESS_DATE, currentWeek);
 			List<StatWeekAccessDO> statWeekAccessDOs = statAccessService.listStatWeekAccesses(paramMap);
 			// 判断该用户是否已存在本周访问统计信息
-			if(statWeekAccessDOs != null && statWeekAccessDOs.size() != 0) {
+			if(statWeekAccessDOs != null && !statWeekAccessDOs.isEmpty()) {
 				// 增加按周访问统计数据
 				statAccessService.increaseStatWeekAccess(statDayAccess);				
 			} else {
@@ -148,19 +152,19 @@ public class StatAccessJob extends QuartzJobBean {
 	 */
 	private void genStatMonthAccess(List<StatDayAccessDTO> handledStatDayAccessList) {
 		// 如果无新增访问数据，则返回
-		if(handledStatDayAccessList == null || handledStatDayAccessList.size() == 0) {
+		if(handledStatDayAccessList == null || handledStatDayAccessList.isEmpty()) {
 			return;
 		}
 		for(StatDayAccessDO statDayAccess : handledStatDayAccessList) {
 			String accessDate = statDayAccess.getAccessDate();
 			String currentMonth = accessDate.substring(0, accessDate.length()-2);
-			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("idUser", statDayAccess.getIdUser());
-			paramMap.put("accessModule", statDayAccess.getAccessModule());
-			paramMap.put("accessDate", currentMonth);
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put(ID_USER, statDayAccess.getIdUser());
+			paramMap.put(ACCESS_MODULE, statDayAccess.getAccessModule());
+			paramMap.put(ACCESS_DATE, currentMonth);
 			List<StatMonthAccessDO> statMonthAccessDOs = statAccessService.listStatMonthAccesses(paramMap);
 			// 判断该用户是否已存在当月访问统计信息
-			if(statMonthAccessDOs != null && statMonthAccessDOs.size() != 0) {
+			if(statMonthAccessDOs != null && !statMonthAccessDOs.isEmpty()) {
 				// 增加按月访问统计数据
 				statAccessService.increaseStatMonthAccess(statDayAccess);				
 			} else {
@@ -180,18 +184,18 @@ public class StatAccessJob extends QuartzJobBean {
 	 */
 	private void genStatYearAccess(List<StatDayAccessDTO> handledStatDayAccessList) {
 		// 如果无新增访问数据，则返回
-		if(handledStatDayAccessList == null || handledStatDayAccessList.size() == 0) {
+		if(handledStatDayAccessList == null || handledStatDayAccessList.isEmpty()) {
 			return;
 		}
 		for(StatDayAccessDO statDayAccess : handledStatDayAccessList) {
 			String accessDate = statDayAccess.getAccessDate();
 			String currentYear = accessDate.substring(0, accessDate.length()-4);
-			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("idUser", statDayAccess.getIdUser());
-			paramMap.put("accessModule", statDayAccess.getAccessModule());
-			paramMap.put("accessDate", currentYear);
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put(ID_USER, statDayAccess.getIdUser());
+			paramMap.put(ACCESS_MODULE, statDayAccess.getAccessModule());
+			paramMap.put(ACCESS_DATE, currentYear);
 			List<StatYearAccessDO> statYearAccessDOs = statAccessService.listStatYearAccesses(paramMap);
-			if(statYearAccessDOs != null && statYearAccessDOs.size() != 0) {
+			if(statYearAccessDOs != null && !statYearAccessDOs.isEmpty()) {
 				statAccessService.increaseStatYearAccess(statDayAccess);		
 			} else {
 				StatYearAccessDO statYearAccess = new StatYearAccessDO();
@@ -209,7 +213,7 @@ public class StatAccessJob extends QuartzJobBean {
 	 */
 	private void clearIncrementDayAccesses(List<StatDayAccessDTO> handledStatDayAccessList) {
 		// 如果无新增访问数据，则返回
-		if(handledStatDayAccessList == null || handledStatDayAccessList.size() == 0) {
+		if(handledStatDayAccessList == null || handledStatDayAccessList.isEmpty()) {
 			return;
 		}
 		List<String> idStatDayAccessList = StatResolver.extractIdsFromStatDayAccessDTOs(handledStatDayAccessList);

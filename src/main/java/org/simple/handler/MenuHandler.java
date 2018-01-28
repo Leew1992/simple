@@ -1,5 +1,6 @@
 package org.simple.handler;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,20 +8,24 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.simple.dto.MenuItem;
 import org.simple.dto.TreeNode;
 import org.simple.entity.MenuDO;
+import org.simple.exception.DateException;
 
 public class MenuHandler {
+	
+	private MenuHandler(){}
 
 	/**
 	 * 排序菜单列表
 	 */
 	public static List<MenuDO> orderMenus(String rootId, List<MenuDO> menuList) {
-		List<MenuDO> orderList = new ArrayList<MenuDO>();
+		List<MenuDO> orderList = new ArrayList<>();
 		return recursive(rootId, menuList, orderList);
 	}
 
@@ -41,7 +46,7 @@ public class MenuHandler {
 	 * 格式化菜单
 	 */
 	public static Map<String, List<MenuItem>> formatOrderedMenus(List<MenuDO> menuList) {
-		Map<String, List<MenuItem>> moduleMap = new HashMap<String, List<MenuItem>>();
+		Map<String, List<MenuItem>> moduleMap = new HashMap<>();
 		String idModule = "";
 		String moduleCode = "";
 		List<MenuItem> menuItemList = null;
@@ -52,7 +57,7 @@ public class MenuHandler {
 			if("0".equals(currentMenu.getIdParent())) {
 				idModule = currentMenu.getIdMenu();
 				moduleCode = currentMenu.getMenuCode();
-				menuItemList = new ArrayList<MenuItem>();
+				menuItemList = new ArrayList<>();
 			}
 			// 二级菜单
 			if(idModule.equals(currentMenu.getIdParent())) {
@@ -87,25 +92,16 @@ public class MenuHandler {
 	 */
 	public static List<TreeNode> generateMonthMenuTree(String startMonth) {
 		if(StringUtils.isEmpty(startMonth)) {
-			return new ArrayList<TreeNode>();
+			return new ArrayList<>();
 		}
-		Map<String, List<String>> pastedMonthMap = new HashMap<String, List<String>>();
-		try {
-			pastedMonthMap = getHasPastedMonths(startMonth);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Map<String, List<String>>  pastedMonthMap = getHasPastedMonths(startMonth);
 		SimpleDateFormat yearSdf = new SimpleDateFormat("yyyy");
 		String nowYear = yearSdf.format(new Date());
-		List<TreeNode> monthNodeList = new ArrayList<TreeNode>();
-		for(String year : pastedMonthMap.keySet()) {
-			List<String> monthList = pastedMonthMap.get(year);
-			TreeNode yearNode = new TreeNode();
-			if(Objects.equals(year, nowYear)) {
-				yearNode = createDateNode("0", year, true);				
-			} else {
-				yearNode = createDateNode("0", year, false);
-			}
+		List<TreeNode> monthNodeList = new ArrayList<>();
+		for(Entry<String, List<String>> entry : pastedMonthMap.entrySet()) {
+			String year = entry.getKey();
+			List<String> monthList = entry.getValue();
+			TreeNode yearNode = createDateNode("0", year, Objects.equals(year, nowYear));				
 			monthNodeList.add(yearNode);
 			for(String month : monthList) {
 				TreeNode monthNode = createDateNode(year, month, false);
@@ -118,12 +114,17 @@ public class MenuHandler {
 	/**
 	 * 获取已经过去的月
 	 */
-	private static Map<String, List<String>> getHasPastedMonths(String startMonth) throws Exception {
-		Map<String, List<String>> pastedMonthMap = new HashMap<String, List<String>>();
+	private static Map<String, List<String>> getHasPastedMonths(String startMonth) {
+		Map<String, List<String>> pastedMonthMap = new HashMap<>();
 		SimpleDateFormat yearSdf = new SimpleDateFormat("yyyy");
 		SimpleDateFormat monthSdf = new SimpleDateFormat("yyyyMM");
 		String nowMonth = monthSdf.format(new Date());
-		Date startDate = monthSdf.parse(startMonth);
+		Date startDate = null;
+		try {
+			startDate = monthSdf.parse(startMonth);
+		} catch (ParseException e) {
+			throw new DateException(e.getMessage());
+		}
 		Calendar startCalendar = Calendar.getInstance();
 		startCalendar.setTime(startDate);
 		String startYearStr = yearSdf.format(startCalendar.getTime());
@@ -132,14 +133,9 @@ public class MenuHandler {
 		Integer nowYearInt = Integer.parseInt(nowYearStr);
 		// 小于当前年份
 		while(startYearInt < nowYearInt) {
-			List<String> monthList = new ArrayList<String>();
+			List<String> monthList = new ArrayList<>();
 			for(int i = 1; i <= 12; i ++) {
-				String monthStr = "";
-				if(i < 10) {
-					monthStr = startYearInt + "0" + i;
-				} else {
-					monthStr = String.valueOf(startYearInt) + i;
-				}
+				String monthStr = i < 10 ? startYearInt + "0" + i : String.valueOf(startYearInt) + i;
 				monthList.add(monthStr);
 			}
 			pastedMonthMap.put(String.valueOf(startYearInt), monthList);
@@ -147,16 +143,10 @@ public class MenuHandler {
 		}
 		// 等于当前年份
 		if(Objects.equals(startYearInt, nowYearInt)) {
-			List<String> monthList = new ArrayList<String>();
+			List<String> monthList = new ArrayList<>();
 			for(int i = 1; i <= 12; i ++) {
-				String monthStr = "";
-				if(i < 10) {
-					monthStr = startYearInt + "0" + i;
-				} else {
-					monthStr = String.valueOf(startYearInt) + i;
-				}
+				String monthStr = i < 10 ? startYearInt + "0" + i : String.valueOf(startYearInt) + i;
 				monthList.add(monthStr);
-				
 				if(Objects.equals(monthStr, nowMonth)) {
 					break;
 				}

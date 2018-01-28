@@ -3,12 +3,15 @@ package org.simple.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.simple.dao.PostDao;
 import org.simple.dto.PostDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.entity.PostDO;
+import org.simple.util.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
@@ -47,7 +50,9 @@ public class PostDaoTest extends BaseTest {
     public void pagingPosts() {
     	PostDTO postDTO = new PostDTO();
     	postDTO.setIdPost("0");
-    	List<PostDO> postList = postDao.pagingPosts(postDTO);
+    	QueryDTO queryDTO = new QueryDTO();
+    	Map<String, Object> paramMap = BeanUtil.convertBeansToMap(postDTO, queryDTO);
+    	List<PostDO> postList = postDao.pagingPosts(paramMap);
     	logger.debug(JSON.toJSONString(postList));
     }
     
@@ -77,19 +82,9 @@ public class PostDaoTest extends BaseTest {
      */
 	@Test
     public void updatePost() {
-    	PostDO postDO = new PostDO();
-    	postDO.setIdPost("1");
-    	postDO.setIdUser("1");
-    	postDO.setTitle("aa");
-    	postDO.setSummary("aa");
-    	postDO.setTags("aa");
-    	postDO.setContent("aa");
-    	postDO.setCollectNum(1);
-    	postDO.setFavorNum(1);
-    	postDO.setCreatedBy("aa");
-    	postDO.setCreatedDate(new Date());
-    	postDO.setUpdatedBy("aa");
-    	postDO.setUpdatedDate(new Date());
+    	PostDO postDO = postDao.getPostById("1");
+    	postDO.setTitle("bb");
+    	postDO.setSummary("bb");
     	postDao.updatePost(postDO);
     	logger.debug("贴子信息更新成功");
     }
@@ -109,7 +104,7 @@ public class PostDaoTest extends BaseTest {
      */
 	@Test
     public void batchDeletePost() {
-		List<String> idPosts = new ArrayList<String>();
+		List<String> idPosts = new ArrayList<>();
 		idPosts.add("0");
 		idPosts.add("1");
 		postDao.batchDeletePosts(idPosts);

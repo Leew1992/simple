@@ -1,8 +1,8 @@
 package org.simple.dao;
 
 import java.util.List;
+import java.util.Map;
 
-import org.simple.dto.AttachmentDTO;
 import org.simple.entity.AttachmentDO;
 import org.springframework.stereotype.Repository;
 
@@ -27,17 +27,17 @@ public interface AttachmentDao {
     /**
      * 获取附件分页
      */
-    List<AttachmentDO> pagingAttachments(AttachmentDTO attachmentDTO);
+    List<AttachmentDO> pagingAttachments(Map<String, Object> paramMap);
     
     /**
      * 统计图片附件数量
      */
-    Integer countAttachmentsByCreatedDateForPicture(String accessDate);
+    Integer countAttachmentsBasedFuzzy(Map<String, Object> paramMap);
     
     /**
      * 统计图片附件数量
      */
-    Integer countAttachmentsInCreatedDatesForPicture(List<String> accessDates);
+    Integer countAttachmentsBasedAccurate(Map<String, Object> paramMap);
     
     /**
      * 统计视频附件数量

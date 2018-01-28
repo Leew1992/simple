@@ -15,7 +15,7 @@
     </select>
     
     <!-- 附件分页查询 -->
-    <select id="pagingAttachments" parameterType="attachmentDTO" resultType="attachmentDO">
+    <select id="pagingAttachments" parameterType="map" resultType="attachmentDO">
         select a.id_attachment,
         	   a.id_user,
 	           a.attach_name,
@@ -53,23 +53,23 @@
     </select>
     
     <!-- 统计图片附件数量 -->
-    <select id="countAttachmentsByCreatedDateForPicture" parameterType="string" resultType="Integer">
+    <select id="countAttachmentsBasedFuzzy" parameterType="string" resultType="Integer">
     	select count(*)
 		  from sim_attachment a
 		 where date_format(a.created_date, '%Y%m%d') like
-		       concat(#{accessDate}, '%')
-		   and a.attach_source = 'picture'
+		       concat(#{createdDate}, '%')
+		   and a.attach_source = #{attachSource}
     </select>
     
     <!-- 统计图片附件数量 -->
-    <select id="countAttachmentsInCreatedDatesForPicture" parameterType="list" resultType="Integer">
+    <select id="countAttachmentsBasedAccurate" parameterType="list" resultType="Integer">
     	select count(*)
 		  from sim_attachment a
 		 where date_format(a.created_date, '%Y%m%d') in
-		 <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+		 <foreach collection="createdDates" index="index" item="item" open="(" separator="," close=")">  
 	        #{item}  
 	     </foreach>
-		 	and a.attach_source = 'picture'
+		 	and a.attach_source = #{attachSource}
     </select>
     
     <!-- 统计视频附件数量 -->

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.simple.exception.ServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,33 +15,14 @@ import org.springframework.util.DigestUtils;
 
 public class IPTokenBasedRememberMeServices extends TokenBasedRememberMeServices {
 
-	private static final ThreadLocal<HttpServletRequest> REQUESTHOLDER = new ThreadLocal<HttpServletRequest>();
-
-	public HttpServletRequest getContext() {
-		return REQUESTHOLDER.get();
-	}
-
-	public void setContext(HttpServletRequest context) {
-		REQUESTHOLDER.set(context);
-	}
+	private static final ThreadLocal<HttpServletRequest> REQUESTHOLDER = new ThreadLocal<>();
 
 	public IPTokenBasedRememberMeServices(String key, UserDetailsService userDetailsService) {
 		super(key, userDetailsService);
 	}
-
+	
 	protected String getUserIPAddress(HttpServletRequest request) {
 		return request.getRemoteAddr();
-	}
-
-	@Override
-	public void onLoginSuccess(HttpServletRequest request, HttpServletResponse response,
-			Authentication successfulAuthentication) {
-		try {
-			setContext(request);
-			super.onLoginSuccess(request, response, successfulAuthentication);
-		} finally {
-			setContext(null);
-		}
 	}
 
 	@Override
@@ -72,11 +54,28 @@ public class IPTokenBasedRememberMeServices extends TokenBasedRememberMeServices
 			return super.processAutoLoginCookie(Arrays.copyOf(cookieTokens, cookieTokens.length - 1), request,
 					response);
 		} catch(Exception e) {
-			e.printStackTrace();
+			throw new ServiceException(e);
 		} finally {
 			setContext(null);
 		}
-		
-		return null;
+	}
+	
+	public HttpServletRequest getContext() {
+		return REQUESTHOLDER.get();
+	}
+
+	public void setContext(HttpServletRequest context) {
+		REQUESTHOLDER.set(context);
+	}
+	
+	@Override
+	public void onLoginSuccess(HttpServletRequest request, HttpServletResponse response,
+			Authentication successfulAuthentication) {
+		try {
+			setContext(request);
+			super.onLoginSuccess(request, response, successfulAuthentication);
+		} finally {
+			setContext(null);
+		}
 	}
 }

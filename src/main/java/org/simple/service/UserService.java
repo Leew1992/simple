@@ -3,6 +3,7 @@ package org.simple.service;
 import java.util.List;
 
 import org.simple.dto.PageDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.ResultDTO;
 import org.simple.dto.UserDTO;
 import org.simple.entity.UserDO;
@@ -26,12 +27,17 @@ public interface UserService {
 	/**
 	 * 获取用户分页列表
 	 */
-	PageDTO pagingUsers(UserDTO userDTO);
+	PageDTO pagingUsers(UserDTO userDTO, QueryDTO queryDTO);
 	
 	/**
 	 * 统计用户数量
 	 */
-	Integer countUsers(List<String> accessDates);
+	Integer countUsersBasedFuzzy(String createdDate);
+	
+	/**
+	 * 统计用户数量
+	 */
+	Integer countUsersBasedAccurate(List<String> createdDates);
 	
 	/**
 	 * 保存用户信息

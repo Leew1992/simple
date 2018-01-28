@@ -3,7 +3,9 @@ package org.simple.util;
 /**
  * 数组操作工具类
  */
-public class ArrayUtils {
+public class ArrayUtil {
+	
+	private ArrayUtil() {}
 
 	/**
 	 * 转换String[]为Long[]

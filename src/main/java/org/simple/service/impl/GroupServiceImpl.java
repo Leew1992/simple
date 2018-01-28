@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.simple.constant.MessageConsts;
+import org.simple.constant.MessageConst;
 import org.simple.context.UserContext;
 import org.simple.dao.GroupDao;
 import org.simple.dto.ResultDTO;
@@ -61,25 +61,25 @@ public class GroupServiceImpl implements GroupService {
 		groupDO.setCreatedBy(UserContext.getCurrentUserName());
 		groupDO.setUpdatedBy(UserContext.getCurrentUserName());
 		groupDao.saveGroup(groupDO);
-		return new ResultDTO(true, groupDO.getIdGroup(), MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true, groupDO.getIdGroup(), MessageConst.SAVE_SUCCESS);
 	}
 	
 	@Override
 	public ResultDTO updateGroup(GroupDO groupDO) {
 		groupDO.setUpdatedBy(UserContext.getCurrentUserName());
 		groupDao.updateGroup(groupDO);
-		return new ResultDTO(true, MessageConsts.UPDATE_SUCCESS);
+		return new ResultDTO(true, MessageConst.UPDATE_SUCCESS);
 	}
 	
 	@Override
 	public ResultDTO deleteGroup(String idGroup) {
 		List<GroupDO> groupList = groupDao.listGroupsByIdParent(idGroup);
-		if(groupList != null && groupList.size() == 0) {
+		if(groupList != null && !groupList.isEmpty()) {
 			groupDao.deleteGroup(idGroup);				
 		} else {
-			return new ResultDTO(false, MessageConsts.HAS_SUB_GROUP_IN_GROUP);
+			return new ResultDTO(false, MessageConst.HAS_SUB_GROUP_IN_GROUP);
 		}
-		return new ResultDTO(true, MessageConsts.DELETE_SUCCESS);
+		return new ResultDTO(true, MessageConst.DELETE_SUCCESS);
 	}
 
 }

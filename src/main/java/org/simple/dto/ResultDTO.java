@@ -1,12 +1,10 @@
 package org.simple.dto;
 
-import java.io.Serializable;
 
 /**
  * 响应消息DTO
  */
-public class ResultDTO implements Serializable {
-	private static final long serialVersionUID = 974781526702228119L;
+public class ResultDTO {
 	private Boolean flag;
 	private Object data;
 	private String msg;

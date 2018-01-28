@@ -1,6 +1,7 @@
 package org.simple.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.simple.dto.CommentDTO;
 import org.simple.entity.CommentDO;
@@ -30,17 +31,17 @@ public interface CommentDao {
     /**
      * 获取评论分页信息
      */
-    List<CommentDTO> pagingComments(CommentDTO commentDTO);
+    List<CommentDTO> pagingComments(Map<String, Object> paramMap);
     
     /**
      * 统计评论数量
      */
-    Integer countCommentsByCreatedDate(String accessDate);
+    Integer countCommentsBasedFuzzy(String createdDate);
     
     /**
      * 统计评论数量
      */
-    Integer countCommentsInCreatedDates(List<String> accessDates);
+    Integer countCommentsBasedAccurate(List<String> createdDates);
     
     /**
      * 保存评论信息

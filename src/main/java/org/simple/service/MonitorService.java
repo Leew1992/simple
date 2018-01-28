@@ -3,6 +3,7 @@ package org.simple.service;
 import java.util.List;
 
 import org.simple.dto.MonitorAccessDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.entity.MonitorAccessDO;
 
 public interface MonitorService {
@@ -15,7 +16,7 @@ public interface MonitorService {
 	/**
 	 * 查询监控访问分页列表
 	 */
-	List<MonitorAccessDTO> pagingMonitorAccesses(MonitorAccessDTO monitorAccessDTO);
+	List<MonitorAccessDTO> pagingMonitorAccesses(MonitorAccessDTO monitorAccessDTO, QueryDTO queryDTO);
 	
 	/**
 	 * 保存监控登录访问信息

@@ -24,10 +24,10 @@ public class SecureFilterInvocationSecurityMetadataSource implements FilterInvoc
 	private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap;
 
 	public SecureFilterInvocationSecurityMetadataSource() {
-		requestMap = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
+		requestMap = new LinkedHashMap<>();
 		
 		AntPathRequestMatcher userMatcher = new AntPathRequestMatcher("/**");
-		Collection<ConfigAttribute> userCas = new ArrayList<ConfigAttribute>();
+		Collection<ConfigAttribute> userCas = new ArrayList<>();
 		ConfigAttribute userCa = new SecurityConfig("REQUIRES_SECURE_CHANNEL");
 		userCas.add(userCa);
 		requestMap.put(userMatcher, userCas);
@@ -52,7 +52,7 @@ public class SecureFilterInvocationSecurityMetadataSource implements FilterInvoc
 				return (Collection) entry.getValue();
 			}
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 	@Override

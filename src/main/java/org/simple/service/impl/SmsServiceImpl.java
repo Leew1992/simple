@@ -27,10 +27,10 @@ public class SmsServiceImpl implements SmsService {
 	}
 
 	@Override
-	public void saveSmsSendRecord(SmsSendRecordDO SmsSendRecordDO) {
-		SmsSendRecordDO.setCreatedBy(UserContext.getCurrentUserName());
-		SmsSendRecordDO.setUpdatedBy(UserContext.getCurrentUserName());
-		smsDao.saveSmsSendRecord(SmsSendRecordDO);
+	public void saveSmsSendRecord(SmsSendRecordDO smsSendRecordDO) {
+		smsSendRecordDO.setCreatedBy(UserContext.getCurrentUserName());
+		smsSendRecordDO.setUpdatedBy(UserContext.getCurrentUserName());
+		smsDao.saveSmsSendRecord(smsSendRecordDO);
 	}
 
 	@Override

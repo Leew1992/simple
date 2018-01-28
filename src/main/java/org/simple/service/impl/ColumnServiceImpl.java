@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.simple.constant.MessageConsts;
+import org.simple.constant.MessageConst;
 import org.simple.context.UserContext;
 import org.simple.dao.ColumnDao;
 import org.simple.dto.ResultDTO;
@@ -45,32 +45,32 @@ public class ColumnServiceImpl implements ColumnService {
 		columnDO.setCreatedBy(UserContext.getCurrentUserName());
 		columnDO.setUpdatedBy(UserContext.getCurrentUserName());
 		columnDao.saveColumn(columnDO);
-		return new ResultDTO(true, columnDO.getIdColumn(), MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true, columnDO.getIdColumn(), MessageConst.SAVE_SUCCESS);
 	}
 
 	@Override
 	public ResultDTO updateColumn(ColumnDO columnDO) {
 		columnDO.setUpdatedBy(UserContext.getCurrentUserName());
 		columnDao.updateColumn(columnDO);
-		return new ResultDTO(true, MessageConsts.UPDATE_SUCCESS);
+		return new ResultDTO(true, MessageConst.UPDATE_SUCCESS);
 	}
 	
 	@Override
 	public ResultDTO deleteColumn(String idColumn) {
 		List<ColumnDO> columnList = columnDao.listColumnsByIdParent(idColumn);
-		if(columnList != null && columnList.size() == 0) {
+		if(columnList != null && !columnList.isEmpty()) {
 			columnDao.deleteColumn(idColumn);
 		} else {
-			return new ResultDTO(false, MessageConsts.HAS_SUB_COLUMN_IN_COLUMN);
+			return new ResultDTO(false, MessageConst.HAS_SUB_COLUMN_IN_COLUMN);
 		}
-		return new ResultDTO(true, MessageConsts.DELETE_SUCCESS);
+		return new ResultDTO(true, MessageConst.DELETE_SUCCESS);
 	}
 
 	@Override
 	public ResultDTO batchDeleteColumns(String idColumns) {
 		String[] idColumnArr = idColumns.split(",");
 		columnDao.batchDeleteColumns(Arrays.asList(idColumnArr));
-		return new ResultDTO(true, MessageConsts.DELETE_SUCCESS);
+		return new ResultDTO(true, MessageConst.DELETE_SUCCESS);
 	}
 	
 }

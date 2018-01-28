@@ -3,12 +3,15 @@ package org.simple.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.simple.dao.CommentDao;
 import org.simple.dto.CommentDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.entity.CommentDO;
+import org.simple.util.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
@@ -36,7 +39,9 @@ public class CommentDaoTest extends BaseTest {
 	@Test
     public void pagingComments() {
     	CommentDTO commentDTO = new CommentDTO();
-    	List<CommentDTO> commentList = commentDao.pagingComments(commentDTO);
+    	QueryDTO queryDTO = new QueryDTO();
+    	Map<String, Object> paramMap = BeanUtil.convertBeansToMap(commentDTO, queryDTO);
+    	List<CommentDTO> commentList = commentDao.pagingComments(paramMap);
     	logger.debug(JSON.toJSONString(commentList));
     }
     
@@ -94,7 +99,7 @@ public class CommentDaoTest extends BaseTest {
      */
 	@Test
     public void testbatchDeleteComments() {
-    	List<String> idComments = new ArrayList<String>();
+    	List<String> idComments = new ArrayList<>();
     	idComments.add("0");
     	idComments.add("1");
     	commentDao.batchDeleteComments(idComments);

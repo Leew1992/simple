@@ -21,7 +21,7 @@ public interface SmsDao {
     /**
      * 保存短信发送记录
      */
-    void saveSmsSendRecord(SmsSendRecordDO SmsSendRecordDO);
+    void saveSmsSendRecord(SmsSendRecordDO smsSendRecordDO);
     
     /**
      * 删除短信发送记录

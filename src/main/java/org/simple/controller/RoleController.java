@@ -2,8 +2,8 @@ package org.simple.controller;
 
 import java.util.List;
 
-import org.simple.constant.MessageConsts;
 import org.simple.dto.PageDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.ResultDTO;
 import org.simple.dto.RoleDTO;
 import org.simple.dto.TreeNode;
@@ -47,8 +47,8 @@ public class RoleController {
 	 */
 	@RequestMapping("/pagingRoles.do")
 	@ResponseBody
-	public PageDTO pagingRoles(RoleDTO roleDTO) {
-		return roleService.pagingRoles(roleDTO);
+	public PageDTO pagingRoles(RoleDTO roleDTO, QueryDTO queryDTO) {
+		return roleService.pagingRoles(roleDTO, queryDTO);
 	}
 	
 	/**
@@ -66,12 +66,7 @@ public class RoleController {
 	@RequestMapping("/saveRole.do")
 	@ResponseBody
 	public ResultDTO saveRole(RoleDTO roleDTO) {
-		try {
-			return roleService.saveRole(roleDTO);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResultDTO(false, MessageConsts.SAVE_FAILURE);
-		}
+		return roleService.saveRole(roleDTO);
 	}
 	
 	/**
@@ -80,12 +75,7 @@ public class RoleController {
 	@RequestMapping("/updateRole.do")
 	@ResponseBody
 	public ResultDTO updateRole(RoleDTO roleDTO) {
-		try {
-			return roleService.updateRole(roleDTO);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResultDTO(false, MessageConsts.UPDATE_FAILURE);
-		}
+		return roleService.updateRole(roleDTO);
 	}
 	
 	/**
@@ -94,12 +84,7 @@ public class RoleController {
 	@RequestMapping("/assignMenusForRole.do")
 	@ResponseBody
 	public ResultDTO assignMenusForRole(String idRole, String idMenus) {
-		try {
-			return roleService.assignMenusForRole(idRole, idMenus);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResultDTO(false, MessageConsts.SAVE_FAILURE);
-		}
+		return roleService.assignMenusForRole(idRole, idMenus);
 	}
 	
 	/**
@@ -108,12 +93,7 @@ public class RoleController {
 	@RequestMapping("/assignSystemsForRole.do")
 	@ResponseBody
 	public ResultDTO assignSystemsForRole(String idRole, String idSystems) {
-		try {
-			return roleService.assignSystemsForRole(idRole, idSystems);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResultDTO(false, MessageConsts.SAVE_FAILURE);
-		}
+		return roleService.assignSystemsForRole(idRole, idSystems);
 	}
 	
 	/**
@@ -122,11 +102,6 @@ public class RoleController {
 	@RequestMapping("/batchDeleteRoles.do")
 	@ResponseBody
 	public ResultDTO batchDeleteRoles(String idRoles) {
-		try {
-			return roleService.batchDeleteRoles(idRoles);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ResultDTO(false, MessageConsts.DELETE_FAILURE);
-		}
+		return roleService.batchDeleteRoles(idRoles);
 	}
 }

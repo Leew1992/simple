@@ -5,12 +5,14 @@ import java.util.List;
 
 import org.simple.entity.MenuDO;
 
-public class MenuUtils {
+public class MenuUtil {
+	
+	private MenuUtil() {}
 	
 	private List<MenuDO> orderList = new ArrayList<MenuDO>();
 	private List<MenuDO> waitOrderList = new ArrayList<MenuDO>();
 	
-	public MenuUtils(List<MenuDO> nodeList) {
+	public MenuUtil(List<MenuDO> nodeList) {
 		this.waitOrderList = nodeList;
 	}
 

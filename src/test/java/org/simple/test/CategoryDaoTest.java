@@ -109,7 +109,7 @@ public class CategoryDaoTest extends BaseTest {
      */
 	@Test
     public void testBatchDeleteCategories() {
-		List<String> idCategories = new ArrayList<String>();
+		List<String> idCategories = new ArrayList<>();
 		idCategories.add("0");
 		idCategories.add("1");
 		categoryDao.batchDeleteCategories(idCategories);

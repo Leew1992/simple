@@ -276,11 +276,21 @@
 	    <beans:constructor-arg name="lookupStrategy" ref="lookupStrategy"/>    
 	</beans:bean>
 	
-	<beans:bean id="aclCache" class="org.simple.security.NullAclCache"/>
+	<beans:bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
+		<beans:constructor-arg name="cache" ref="cache" />
+		<beans:constructor-arg name="permissionGrantingStrategy" ref="grantingStrategy" />
+		<beans:constructor-arg name="aclAuthorizationStrategy" ref="aclAuthorizationStrategy" />
+	</beans:bean>
+	
+	<beans:bean id="cache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"/>
+    
+    <beans:bean id="grantingStrategy" class="org.springframework.security.acls.domain.DefaultPermissionGrantingStrategy">
+      	<beans:constructor-arg name="auditLogger" ref="aclAuditLogger" />
+    </beans:bean>
 	
 	<beans:bean id="aclAuditLogger" class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>       
 	
-	<beans:bean id="aclAuthzStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">    
+	<beans:bean id="aclAuthorizationStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">    
 	  <beans:constructor-arg name="auths">    
 	    <beans:array>    
 	      <beans:ref bean="aclAdminAuthority"/>    
@@ -316,7 +326,7 @@
 	<beans:bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">    
 	  <beans:constructor-arg ref="dataSource"/>    
 	  <beans:constructor-arg ref="aclCache"/>    
-	  <beans:constructor-arg ref="aclAuthzStrategy"/>    
+	  <beans:constructor-arg ref="aclAuthorizationStrategy"/>    
 	  <beans:constructor-arg ref="aclAuditLogger"/> 
 	</beans:bean>
 	

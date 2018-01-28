@@ -39,22 +39,22 @@ public interface StatAccessDao {
 	/**
 	 * 分页获取日访问数据
 	 */
-	List<StatDayAccessDTO> pagingStatDayAccesses(StatDayAccessDTO StatDayAccessDTO);
+	List<StatDayAccessDTO> pagingStatDayAccesses(StatDayAccessDTO statDayAccessDTO);
 	
 	/**
 	 * 分页获取周访问数据
 	 */
-	List<StatWeekAccessDTO> pagingStatWeekAccesses(StatWeekAccessDTO StatWeekAccessDTO);
+	List<StatWeekAccessDTO> pagingStatWeekAccesses(StatWeekAccessDTO statWeekAccessDTO);
 	
 	/**
 	 * 分页获取月访问数据
 	 */
-	List<StatMonthAccessDTO> pagingStatMonthAccesses(StatMonthAccessDTO StatMonthAccessDTO);
+	List<StatMonthAccessDTO> pagingStatMonthAccesses(StatMonthAccessDTO statMonthAccessDTO);
 	
 	/**
 	 * 分页获取年访问数据
 	 */
-	List<StatYearAccessDTO> pagingStatYearAccesses(StatYearAccessDTO StatYearAccessDTO);
+	List<StatYearAccessDTO> pagingStatYearAccesses(StatYearAccessDTO statYearAccessDTO);
 	
 	/**
 	 * 统计年访问数据
@@ -84,22 +84,22 @@ public interface StatAccessDao {
 	/**
 	 * 保存日访问数据
 	 */
-	void saveStatDayAccess(StatDayAccessDO StatDayAccessDO);
+	void saveStatDayAccess(StatDayAccessDO statDayAccessDO);
 	
 	/**
 	 * 保存周访问数据
 	 */
-	void saveStatWeekAccess(StatWeekAccessDO StatWeekAccessDO);
+	void saveStatWeekAccess(StatWeekAccessDO statWeekAccessDO);
 	
 	/**
 	 * 保存月访问数据
 	 */
-	void saveStatMonthAccess(StatMonthAccessDO StatMonthAccessDO);
+	void saveStatMonthAccess(StatMonthAccessDO statMonthAccessDO);
 	
 	/**
 	 * 保存年访问数据
 	 */
-	void saveStatYearAccess(StatYearAccessDO StatYearAccessDO);
+	void saveStatYearAccess(StatYearAccessDO statYearAccessDO);
 	
 	/**
 	 * 增加日访问数量

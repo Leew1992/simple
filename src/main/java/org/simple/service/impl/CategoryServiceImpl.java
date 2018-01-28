@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.simple.constant.MessageConsts;
+import org.simple.constant.MessageConst;
 import org.simple.context.UserContext;
 import org.simple.dao.CategoryDao;
 import org.simple.dto.ResultDTO;
@@ -62,31 +62,31 @@ public class CategoryServiceImpl implements CategoryService {
 		categoryDO.setCreatedBy(UserContext.getCurrentUserName());
 		categoryDO.setUpdatedBy(UserContext.getCurrentUserName());
 		categoryDao.saveCategory(categoryDO);
-		return new ResultDTO(true, categoryDO.getIdCategory(), MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true, categoryDO.getIdCategory(), MessageConst.SAVE_SUCCESS);
 	}
 
 	@Override
 	public ResultDTO updateCategory(CategoryDO categoryDO) {
 		categoryDO.setUpdatedBy(UserContext.getCurrentUserName());
 		categoryDao.updateCategory(categoryDO);
-		return new ResultDTO(true, MessageConsts.UPDATE_SUCCESS);
+		return new ResultDTO(true, MessageConst.UPDATE_SUCCESS);
 	}
 
 	@Override
 	public ResultDTO batchDeleteCategories(String[] idCategories) {
 		categoryDao.batchDeleteCategories(Arrays.asList(idCategories));
-		return new ResultDTO(true, MessageConsts.DELETE_SUCCESS);
+		return new ResultDTO(true, MessageConst.DELETE_SUCCESS);
 	}
 	
 	@Override
 	public ResultDTO deleteCategory(String idCategory) {
 		List<CategoryDO> categoryList = categoryDao.listCategoriesByIdParent(idCategory);
-		if(categoryList != null && categoryList.size() == 0) {
+		if(categoryList != null && !categoryList.isEmpty()) {
 			categoryDao.deleteCategory(idCategory);
 		} else {
-			return new ResultDTO(false, MessageConsts.HAS_SUB_CATEGORY_IN_CATEGORY);
+			return new ResultDTO(false, MessageConst.HAS_SUB_CATEGORY_IN_CATEGORY);
 		}
-		return new ResultDTO(true, MessageConsts.DELETE_SUCCESS);
+		return new ResultDTO(true, MessageConst.DELETE_SUCCESS);
 	}
 
 }

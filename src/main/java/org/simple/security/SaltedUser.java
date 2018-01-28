@@ -1,18 +1,15 @@
 package org.simple.security;
 
-import java.util.List;
-
-import org.springframework.security.core.GrantedAuthority;
+import org.simple.dto.SaltedUserDTO;
 import org.springframework.security.core.userdetails.User;
 
 @SuppressWarnings("serial")
 public class SaltedUser extends User {
 	private String salt;
 
-	public SaltedUser(String username, String password, boolean enabled, boolean accountNonExpired,
-			boolean credentialsNonExpired, boolean accountNonLocked, List<GrantedAuthority> authorities, String salt) {
-		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-		this.salt = salt;
+	public SaltedUser(SaltedUserDTO saltedUserDTO) {
+		super(saltedUserDTO.getUsername(), saltedUserDTO.getPassword(), saltedUserDTO.getEnabled(), saltedUserDTO.getAccountNonExpired(), saltedUserDTO.getCredentialsNonExpired(), saltedUserDTO.getAccountNonLocked(), saltedUserDTO.getAuthorities());
+		this.salt = saltedUserDTO.getSalt();
 	}
 
 	public String getSalt() {

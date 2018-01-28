@@ -15,6 +15,8 @@ public class UserContext {
 	private static final String UNKNOWN = "unknown";
 	private static final String ROLE_PREFIX = "ROLE_";
 	private static final String EMPTY_STRING = "";
+	
+	private UserContext(){}
 
 	/**
 	 * 获取当前用户
@@ -42,7 +44,7 @@ public class UserContext {
 	@SuppressWarnings("unchecked")
 	public static List<String> listCurrentRoleNames() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		List<String> authorityList = new ArrayList<String>();
+		List<String> authorityList = new ArrayList<>();
 		if(authentication != null) {
 			List<GrantedAuthority> grantedAuthorityList = (List<GrantedAuthority>) authentication.getAuthorities();
 			for(GrantedAuthority grantedAuthority : grantedAuthorityList) {

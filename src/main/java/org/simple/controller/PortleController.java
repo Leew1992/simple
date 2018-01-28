@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/portal")
-public class PortalController {
+@RequestMapping("/portle")
+public class PortleController {
 	
 	@Autowired
 	private UserService userService;
@@ -30,11 +30,7 @@ public class PortalController {
 	@MonitorAccess
 	@RequestMapping("/register.do")
 	public String register(UserDTO userDTO) {
-		try {
-			userService.register(userDTO);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		userService.register(userDTO);
 		return "redirect:/login.html";
 	}
 	
@@ -48,7 +44,7 @@ public class PortalController {
 		String currentUserName = UserContext.getCurrentUserName();
 		Map<String, List<MenuDO>> menuMap = UserCache.getMenuCache();
 		List<MenuDO> menuList = menuMap.get(currentUserName);
-		if(menuList != null && menuList.size() != 0) {
+		if(menuList != null && !menuList.isEmpty()) {
 			List<MenuDO> orderedMenuList = MenuHandler.orderMenus("0", menuList);
 			moduleMap = MenuHandler.formatOrderedMenus(orderedMenuList);			
 		}

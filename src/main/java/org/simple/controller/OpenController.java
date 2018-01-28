@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.simple.dto.ResultDTO;
 import org.simple.entity.MailSendRecordDO;
 import org.simple.entity.SmsSendRecordDO;
+import org.simple.exception.WebException;
 import org.simple.manager.MailManager;
 import org.simple.manager.SmsManager;
 import org.simple.service.MailService;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class OpenController {
 
 	protected final Logger logger = Logger.getLogger(getClass());
-	private static String VERIFY_CODE = "【简约】您正在注册账号，验证码：%s，请在30钟内使用，谢谢。";
+	private static final String VERIFY_CODE = "【简约】您正在注册账号，验证码：%s，请在30钟内使用，谢谢。";
 	private static final String SENDER = "简约";
 	private static final String SUBJECT = "账号注册";
 	private static final String FROM = "lwzhang1992@126.com";
@@ -50,7 +51,7 @@ public class OpenController {
 			smsService.saveSmsSendRecord(smsSendRecordDO);
 			SmsManager.sendSms(mobilephone, smsContent);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new WebException(e);
 		}
 		return new ResultDTO(true,"发送成功");
 	}
@@ -76,7 +77,7 @@ public class OpenController {
 			mailService.saveMailSendRecord(mailSendRecordDO);
 			MailManager.sendVerifyCodeByMail(content, email);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new WebException(e);
 		}
 		return new ResultDTO(true,"发送成功");
 	}

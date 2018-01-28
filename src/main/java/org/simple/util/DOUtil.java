@@ -3,7 +3,9 @@ package org.simple.util;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-public class DOUtils {
+public class DOUtil {
+	
+	private DOUtil() {}
 	
 	public static Object mappingValues(Object object, String createdBy, Date createdDate, String updatedBy, Date updatedDate) throws Exception {
 	

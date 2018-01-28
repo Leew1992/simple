@@ -9,11 +9,6 @@ public class UserDTO extends UserDO {
 	private static final long serialVersionUID = -8764860999367616106L;
 	// 列表查询
 	private String idGroup;
-	private String keyWord;
-	private String startDate;
-	private String endDate;
-	private String sortName;
-	private String sortOrder;
 	// 分配角色
 	private String idRoles;
 	// 保存用户
@@ -27,46 +22,6 @@ public class UserDTO extends UserDO {
 
 	public void setIdGroup(String idGroup) {
 		this.idGroup = idGroup;
-	}
-
-	public String getKeyWord() {
-		return keyWord;
-	}
-
-	public void setKeyWord(String keyWord) {
-		this.keyWord = keyWord;
-	}
-
-	public String getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
-
-	public String getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getSortName() {
-		return sortName;
-	}
-
-	public void setSortName(String sortName) {
-		this.sortName = sortName;
-	}
-
-	public String getSortOrder() {
-		return sortOrder;
-	}
-
-	public void setSortOrder(String sortOrder) {
-		this.sortOrder = sortOrder;
 	}
 
 	public String getIdRoles() {

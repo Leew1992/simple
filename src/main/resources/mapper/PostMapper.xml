@@ -69,15 +69,15 @@
     </select>
     
     <!-- 统计贴子的数量 -->
-    <select id="countPostsByCreatedDate" parameterType="string" resultType="Integer">
+    <select id="countPostsBasedFuzzy" parameterType="string" resultType="Integer">
 		select count(*)
 		  from sim_post p
 		 where date_format(p.created_date, '%Y%m%d') like
-		       concat(#{accessDate}, '%')
+		       concat(#{createdDate}, '%')
 	</select>
 	
 	<!-- 统计贴子的数量 -->
-    <select id="countPostsInCreatedDates" parameterType="list" resultType="Integer">
+    <select id="countPostsBasedAccurate" parameterType="list" resultType="Integer">
 		select count(*)
 		  from sim_post p
 		 where date_format(p.created_date, '%Y%m%d') in

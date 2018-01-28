@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.simple.dto.CommentDTO;
 import org.simple.dto.PageDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.ResultDTO;
 import org.simple.entity.CommentDO;
 import org.simple.service.CommentService;
@@ -45,8 +46,8 @@ public class CommentController {
 	 */
 	@RequestMapping("/pagingComments.do")
 	@ResponseBody
-	public PageDTO pagingComments(CommentDTO commentDTO) {
-		return commentService.pagingComments(commentDTO);
+	public PageDTO pagingComments(CommentDTO commentDTO, QueryDTO queryDTO) {
+		return commentService.pagingComments(commentDTO, queryDTO);
 	}
 	
 	/**

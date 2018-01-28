@@ -1,5 +1,6 @@
 package org.simple.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,10 +10,6 @@ import java.util.Map;
 import org.apache.http.client.utils.DateUtils;
 import org.simple.dto.ChartDTO;
 import org.simple.entity.BaseStatDataDO;
-import org.simple.entity.StatDayDataDO;
-import org.simple.entity.StatMonthDataDO;
-import org.simple.entity.StatWeekDataDO;
-import org.simple.entity.StatYearDataDO;
 import org.simple.service.StatAccessService;
 import org.simple.service.StatDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,36 +32,29 @@ public class StatController {
 	 */
 	@RequestMapping("/getStatData.do")
 	@ResponseBody
+	@SuppressWarnings("rawtypes")
 	public BaseStatDataDO getStatData(String dateDimension) {
 		BaseStatDataDO statData = new BaseStatDataDO();
+		List dataList = new ArrayList<>();
 		if("day".equals(dateDimension)) {
 			String today = DateUtils.formatDate(new Date(), "yyyyMMdd");
-			List<StatDayDataDO> dayDataList = statDataService.listStatDayDatas(today);
-			if(dayDataList != null && dayDataList.size() != 0) {
-				statData = dayDataList.get(0);				
-			}
+			dataList = statDataService.listStatDayDatas(today);
 		}
 		if("week".equals(dateDimension)) {
 			Calendar cal = Calendar.getInstance();
 			String thisWeek = DateUtils.formatDate(new Date(), "yyyy." + cal.get(Calendar.WEEK_OF_YEAR));
-			List<StatWeekDataDO> weekDataList = statDataService.listStatWeekDatas(thisWeek);
-			if(weekDataList != null && weekDataList.size() != 0) {
-				statData = weekDataList.get(0);				
-			}
+			dataList = statDataService.listStatWeekDatas(thisWeek);
 		}
 		if("month".equals(dateDimension)) {
 			String thisMonth = DateUtils.formatDate(new Date(), "yyyyMM");
-			List<StatMonthDataDO> monthDataList = statDataService.listStatMonthDatas(thisMonth);
-			if(monthDataList != null && monthDataList.size() != 0) {
-				statData = monthDataList.get(0);				
-			}
+			dataList = statDataService.listStatMonthDatas(thisMonth);
 		}
 		if("year".equals(dateDimension)) {
 			String thisYear = DateUtils.formatDate(new Date(), "yyyy");
-			List<StatYearDataDO> yearDataList = statDataService.listStatYearDatas(thisYear);
-			if(yearDataList != null && yearDataList.size() != 0) {
-				statData = yearDataList.get(0);
-			}
+			dataList = statDataService.listStatYearDatas(thisYear);
+		}
+		if(dataList != null && !dataList.isEmpty()) {
+			statData = (BaseStatDataDO) dataList.get(0);
 		}
 		return statData;
 	}
@@ -75,7 +65,7 @@ public class StatController {
 	@RequestMapping("/getStatAccess.do")
 	@ResponseBody
 	public Map<String, Object> getStatAccess(String dateDimension) {
-		Map<String, Object> statAccessMap = new HashMap<String, Object>();
+		Map<String, Object> statAccessMap = new HashMap<>();
 		if("day".equals(dateDimension)) {
 			String today = DateUtils.formatDate(new Date(), "yyyyMMdd");
 			statAccessMap = statAccessService.getStatDayAccessCount(today);
@@ -113,4 +103,5 @@ public class StatController {
 	public ChartDTO getStatAccessChart(String dateDimension, String moduleType) {
 		return statAccessService.getStatAccessChart(dateDimension, moduleType);
 	}
+	
 }

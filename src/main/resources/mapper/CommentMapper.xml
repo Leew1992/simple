@@ -63,7 +63,7 @@
     </select>
     
     <!-- 统计评论数量 -->
-    <select id="countCommentsByCreatedDate" parameterType="string" resultType="Integer">
+    <select id="countCommentsBasedFuzzy" parameterType="string" resultType="Integer">
     	select count(*)
 		  from sim_comment c
 		 where date_format(c.created_date, '%Y%m%d') like
@@ -71,7 +71,7 @@
     </select>
     
     <!-- 统计评论数量 -->
-    <select id="countCommentsInCreatedDates" parameterType="list" resultType="Integer">
+    <select id="countCommentsBasedAccurate" parameterType="list" resultType="Integer">
     	select count(*)
 		  from sim_comment c
 		 where date_format(c.created_date, '%Y%m%d') in

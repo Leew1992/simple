@@ -1,6 +1,7 @@
 package org.simple.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.simple.dto.MonitorAccessDTO;
 import org.simple.entity.MonitorAccessDO;
@@ -17,7 +18,7 @@ public interface MonitorDao {
 	/**
 	 * 查询监控访问分页列表
 	 */
-	List<MonitorAccessDTO> pagingMonitorAccesses(MonitorAccessDTO monitorAccessDTO);
+	List<MonitorAccessDTO> pagingMonitorAccesses(Map<String, Object> paramMap);
 	
 	/**
 	 * 保存监控登录访问信息

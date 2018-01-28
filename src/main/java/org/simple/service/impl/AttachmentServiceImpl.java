@@ -1,18 +1,21 @@
 package org.simple.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.simple.constant.MessageConsts;
+import org.simple.constant.MessageConst;
 import org.simple.context.UserContext;
 import org.simple.dao.AttachmentDao;
 import org.simple.dao.PostDao;
 import org.simple.dto.AttachmentDTO;
 import org.simple.dto.PageDTO;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.ResultDTO;
 import org.simple.entity.AttachmentDO;
 import org.simple.service.AttachmentService;
+import org.simple.util.BeanUtil;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,8 +41,9 @@ public class AttachmentServiceImpl implements AttachmentService {
 	}
 
 	@Override
-	public PageDTO pagingAttachments(AttachmentDTO attachmentDTO) {
-		List<AttachmentDO> attachmentList = attachmentDao.pagingAttachments(attachmentDTO);
+	public PageDTO pagingAttachments(AttachmentDTO attachmentDTO, QueryDTO queryDTO) {
+		Map<String, Object> paramMap = BeanUtil.convertBeansToMap(attachmentDTO, queryDTO);
+		List<AttachmentDO> attachmentList = attachmentDao.pagingAttachments(paramMap);
 		PageDTO page = new PageDTO();
 		page.setRows(attachmentList);
 		page.setTotal(attachmentList.size());
@@ -47,14 +51,13 @@ public class AttachmentServiceImpl implements AttachmentService {
 	}
 	
 	@Override
-	public Integer countAttachmentsByCreatedDateForPicture(String accessDate) {
-		return attachmentDao.countAttachmentsByCreatedDateForPicture(accessDate);
+	public Integer countAttachmentsBasedFuzzy(Map<String, Object> paramMap) {
+		return attachmentDao.countAttachmentsBasedFuzzy(paramMap);
 	}
 	
 	@Override
-	public Integer countAttachmentsInCreatedDatesForPicture(
-			List<String> accessDates) {
-		return attachmentDao.countAttachmentsInCreatedDatesForPicture(accessDates);
+	public Integer countAttachmentsBasedAccurate(Map<String, Object> paramMap) {
+		return attachmentDao.countAttachmentsBasedAccurate(paramMap);
 	}
 
 	@Override
@@ -73,21 +76,21 @@ public class AttachmentServiceImpl implements AttachmentService {
 		attachmentDO.setCreatedBy(UserContext.getCurrentUserName());
 		attachmentDO.setUpdatedBy(UserContext.getCurrentUserName());
 		attachmentDao.saveAttachment(attachmentDO);
-		return new ResultDTO(true, MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true, MessageConst.SAVE_SUCCESS);
 	}
 	
 	@Override
 	public ResultDTO updateAttachment(AttachmentDO attachmentDO) {
 		attachmentDao.updateAttachment(attachmentDO);
 		attachmentDO.setUpdatedBy(UserContext.getCurrentUserName());
-		return new ResultDTO(true, MessageConsts.UPDATE_SUCCESS);
+		return new ResultDTO(true, MessageConst.UPDATE_SUCCESS);
 	}
 
 	@Override
 	public ResultDTO deleteAttachment(String idAttachment) {
 		postDao.deletePostAttachmentByAttachment(idAttachment);
 		attachmentDao.deleteAttachment(idAttachment);
-		return new ResultDTO(true, MessageConsts.DELETE_SUCCESS);
+		return new ResultDTO(true, MessageConst.DELETE_SUCCESS);
 	}
 
 }

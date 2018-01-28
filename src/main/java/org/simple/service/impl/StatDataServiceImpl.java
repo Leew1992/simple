@@ -2,7 +2,7 @@ package org.simple.service.impl;
 
 import java.util.List;
 
-import org.simple.constant.MessageConsts;
+import org.simple.constant.MessageConst;
 import org.simple.context.UserContext;
 import org.simple.dao.StatDataDao;
 import org.simple.dto.ResultDTO;
@@ -45,7 +45,7 @@ public class StatDataServiceImpl implements StatDataService {
 		statDayDataDO.setCreatedBy(UserContext.getCurrentUserName());
 		statDayDataDO.setUpdatedBy(UserContext.getCurrentUserName());
 		statDataDao.saveStatDayData(statDayDataDO);
-		return new ResultDTO(true, MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true, MessageConst.SAVE_SUCCESS);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class StatDataServiceImpl implements StatDataService {
 		statWeekDataDO.setCreatedBy(UserContext.getCurrentUserName());
 		statWeekDataDO.setUpdatedBy(UserContext.getCurrentUserName());
 		statDataDao.saveStatWeekData(statWeekDataDO);
-		return new ResultDTO(true, MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true, MessageConst.SAVE_SUCCESS);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class StatDataServiceImpl implements StatDataService {
 		statMonthDataDO.setCreatedBy(UserContext.getCurrentUserName());
 		statMonthDataDO.setUpdatedBy(UserContext.getCurrentUserName());
 		statDataDao.saveStatMonthData(statMonthDataDO);
-		return new ResultDTO(true, MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true, MessageConst.SAVE_SUCCESS);
 	}
 
 	@Override
@@ -69,31 +69,31 @@ public class StatDataServiceImpl implements StatDataService {
 		statYearDataDO.setCreatedBy(UserContext.getCurrentUserName());
 		statYearDataDO.setUpdatedBy(UserContext.getCurrentUserName());
 		statDataDao.saveStatYearData(statYearDataDO);
-		return new ResultDTO(true, MessageConsts.SAVE_SUCCESS);
+		return new ResultDTO(true, MessageConst.SAVE_SUCCESS);
 	}
 
 	@Override
 	public ResultDTO updateDayDataForCurrentDay(StatDayDataDO statDayDataDO) {
 		statDataDao.updateDayDataForCurrentDay(statDayDataDO);
-		return new ResultDTO(true, MessageConsts.UPDATE_SUCCESS);
+		return new ResultDTO(true, MessageConst.UPDATE_SUCCESS);
 	}
 
 	@Override
 	public ResultDTO updateWeekDataForCurrentWeek(StatWeekDataDO statWeekDataDO) {
 		statDataDao.updateWeekDataForCurrentWeek(statWeekDataDO);
-		return new ResultDTO(true, MessageConsts.UPDATE_SUCCESS);
+		return new ResultDTO(true, MessageConst.UPDATE_SUCCESS);
 	}
 
 	@Override
 	public ResultDTO updateMonthDataForCurrentMonth(StatMonthDataDO statMonthDataDO) {
 		statDataDao.updateMonthDataForCurrentMonth(statMonthDataDO);
-		return new ResultDTO(true, MessageConsts.UPDATE_SUCCESS);
+		return new ResultDTO(true, MessageConst.UPDATE_SUCCESS);
 	}
 
 	@Override
 	public ResultDTO updateYearDataForCurrentYear(StatYearDataDO statYearDataDO) {
 		statDataDao.updateYearDataForCurrentYear(statYearDataDO);
-		return new ResultDTO(true, MessageConsts.UPDATE_SUCCESS);
+		return new ResultDTO(true, MessageConst.UPDATE_SUCCESS);
 	}
 
 }

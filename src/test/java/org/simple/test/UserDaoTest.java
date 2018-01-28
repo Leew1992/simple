@@ -3,13 +3,16 @@ package org.simple.test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.simple.dao.UserDao;
+import org.simple.dto.QueryDTO;
 import org.simple.dto.UserDTO;
 import org.simple.entity.UserDO;
 import org.simple.entity.UserRoleDO;
+import org.simple.util.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
@@ -36,7 +39,9 @@ public class UserDaoTest extends BaseTest {
     @Test
     public void testPageUsers() {
     	UserDTO userDTO = new UserDTO();
-    	List<UserDO> userList = userDao.pagingUsers(userDTO);
+    	QueryDTO queryDTO = new QueryDTO();
+    	Map<String, Object> paramMap = BeanUtil.convertBeansToMap(userDTO, queryDTO);
+    	List<UserDO> userList = userDao.pagingUsers(paramMap);
     	logger.debug(JSON.toJSONString(userList));
     }
     
@@ -88,7 +93,7 @@ public class UserDaoTest extends BaseTest {
 	 */
     @Test
     public void testbatchDeleteUsers() {
-    	List<String> idUsers = new ArrayList<String>();
+    	List<String> idUsers = new ArrayList<>();
     	idUsers.add("0");
     	idUsers.add("1");
     	userDao.batchDeleteUsers(idUsers);
@@ -122,7 +127,7 @@ public class UserDaoTest extends BaseTest {
 	 */
     @Test
     public void testBatchDeleteUserRoles() {
-    	List<String> idUserRoles = new ArrayList<String>();
+    	List<String> idUserRoles = new ArrayList<>();
     	idUserRoles.add("1");
     	idUserRoles.add("2");
     	userDao.batchDeleteUserRolesByIdUsers(idUserRoles);

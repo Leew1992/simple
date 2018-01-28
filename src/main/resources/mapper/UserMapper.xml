@@ -41,7 +41,15 @@
 	</select>
 	
 	<!-- 统计用户数量 -->
-	<select id="countUsers" parameterType="list" resultType="Integer">
+	<select id="countUsersBasedFuzzy" parameterType="string" resultType="Integer">
+		select count(*)
+		  from sim_user
+		 where date_format(p.created_date, '%Y%m%d') like
+		       concat(#{createdDate}, '%')
+	</select>
+	
+	<!-- 统计用户数量 -->
+	<select id="countUsersBasedAccurate" parameterType="list" resultType="Integer">
 		select count(*)
 		  from sim_user
 		 where date_format(created_date, '%Y%m%d') in

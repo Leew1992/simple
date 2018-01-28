@@ -91,7 +91,7 @@ public class AttachmentDaoTest extends BaseTest {
      */
     @Test
     public void testBatchDeleteAttachments() {
-    	List<String> idAttachments = new ArrayList<String>();
+    	List<String> idAttachments = new ArrayList<>();
     	idAttachments.add("0");
     	idAttachments.add("1");
     	attachmentDao.batchDeleteAttachments(idAttachments);
